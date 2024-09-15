@@ -1,3 +1,7 @@
+ /////////////////////////////////////////////
+ // Matheus Gabriel Viana Araujo - 10420444 //
+ // Enzo Carvalho Pagliarini - 10425707	    //
+ /////////////////////////////////////////////
 
 public class Stack {
 	private static final int DEFAULT_SIZE = 10;

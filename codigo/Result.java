@@ -1,4 +1,9 @@
 
+ /////////////////////////////////////////////
+ // Matheus Gabriel Viana Araujo - 10420444 //
+ // Enzo Carvalho Pagliarini - 10425707	    //
+ /////////////////////////////////////////////
+
 // Usado no retorno dos métodos push(), pop() e top() da classe Stack.
 public class Result {
 
