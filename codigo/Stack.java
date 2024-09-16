@@ -3,79 +3,80 @@
  // Enzo Carvalho Pagliarini - 10425707	    //
  /////////////////////////////////////////////
 
-public class Stack {
+public class Stack<T> {
 	private static final int DEFAULT_SIZE = 10;
-	
-	private int data[];
+
+	private T data[];
 	private int count;
-	
+
 	public Stack() {
 		this(DEFAULT_SIZE);
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	public Stack(int size) {
-		data = new int[size];
+		data = (T[])new Object[size];
 		count = 0;
 	}
-	
-	public Result push(int value) {
+
+	public Result<T> push(T value) {
 		if (isFull()) {
 			// OBSERVAÇÃO: Evite instruções de saída (print),
 			// pois nem sempre queremos ter essas saídas no programa.
 			// Exemplo: a mensagem abaixo está em português, mas e
 			// se o programa fosse inteiro em outra língua?
 			//System.out.println("Erro push(): pilha cheia.");
-			return new Result(-1, 0);
+			return new Result<T>(-1, null);
 		}
-		
+
 		data[count] = value;
 		++count;
-		
-		return new Result(0, 0);
+
+		return new Result<T>(0, null);
 	}
-	
-	public Result pop() {
+
+	public Result<T> pop() {
 		if (isEmpty()) {
 			//System.out.println("Erro pop(): pilha vazia.");
-			return new Result(-1, 0);
+			return new Result<T>(-1, null);
 		}
 
 		--count;
-		int value = data[count];
-		
+		T value = data[count];
+
 		// Reinicia o conteúdo do elemento na posição removida.
 		// Se data[] for um array de objetos, atribuir o valor null.
-		data[count] = 0;
-		
-		return new Result(0, value);
+		data[count] = null;
+
+		return new Result<T>(0, value);
 	}
-	
-	public Result top() {
+
+	public Result<T> top() {
 		if (isEmpty()) {
-			return new Result(-1, 0);
+			return new Result<T>(-1, null);
 		}
-		
-		return new Result(0, data[count - 1]);
+
+		return new Result<T>(0, data[count - 1]);
 	}
-	
+
 	public boolean isFull() {
 		return count == data.length;
 	}
-	
+
 	public boolean isEmpty() {
 		return count == 0;
 	}
-	
+
 	// Retorna tamanho (capacidade) da pilha.
 	public int size() {
 		return data.length;
 	}
-	
+
 	// Retorna quantidade de elementos empilhados.
 	public int count() {
 		return count;
 	}
-	
+
 	@Override
 	public String toString() {
 		/*
@@ -89,7 +90,7 @@ public class Stack {
 		str += "count: " + count;
 		return str;
 		*/
-		
+
 		// Código abaixo faz a mesma coisa, mas de forma
 		// mais eficiente (não há criação de strings temporárias
 		// a cada concatenação).

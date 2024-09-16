@@ -3,14 +3,36 @@
  // Enzo Carvalho Pagliarini - 10425707	    //
  /////////////////////////////////////////////
 
+import java.util.Scanner;
+
 public class Program {
 
 	public static void main(String[] args) {
 
-		Stack stack = new Stack(10);
-		stack.push(66);
-	    System.out.println(stack.count());
-		System.out.println(stack);
+		// Menu básico, poderia ser uma classe separada
+		Scanner scanner = new Scanner(System.in);
+		String input = "-";
+
+		while (!input.equals("EXIT")) {
+
+			System.out.print("> ");
+
+			// Recebe o texto e converte pra maiúsculo
+			input = scanner.nextLine().toUpperCase();
+
+			switch (input) {
+				case "RESET":
+					System.out.println("Variáveis reiniciadas");
+					break;
+				case "EXIT":
+					break;
+				default:
+					System.out.println("Erro: expressão inválida");
+					break;
+			}
+		}
+
+		scanner.close();
 		return;
 	}
 
