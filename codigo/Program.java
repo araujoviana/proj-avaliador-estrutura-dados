@@ -9,31 +9,33 @@ public class Program {
 
 	public static void main(String[] args) {
 
-		// Menu básico, poderia ser uma classe separada
+		// Menu básico
 		Scanner scanner = new Scanner(System.in);
-		String input = "-";
 
-		while (!input.equals("EXIT")) {
+		Expression expression = new Expression();
+
+		while (!expression.getInfixExpression().equals("EXIT")){
 
 			System.out.print("> ");
 
 			// Recebe o texto e converte pra maiúsculo
-			input = scanner.nextLine().toUpperCase();
+			String input = scanner.nextLine().toUpperCase();
+			expression.setInfixExpression(input);
 
-			switch (input) {
-				case "RESET":
-					System.out.println("Variáveis reiniciadas");
-					break;
-				case "EXIT":
-					break;
-				default:
-					System.out.println("Erro: expressão inválida");
-					break;
+			// Verifica se a expressão é válida e
+			// converte para pósfixo
+			if (expression.isValid()) {
+				// Converteria a expressão infixo pra posfixo
+				expression.setInfixExpression(expression.toPostfix());
+				// Executa o comando/cálculo
+				expression.evaluate();
 			}
+			else {
+				System.out.println("Erro: comando inválido");
+            }
 		}
 
 		scanner.close();
-		return;
 	}
 
 }
