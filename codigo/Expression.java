@@ -18,6 +18,7 @@ public class Expression {
     public String toPostfix() {
         // Converte a expressão infixa pra posfixa
         // TODO: Implementar conversão
+        // teste
         System.out.println("Convertendo para posfixo...");
         return "Expressão em posfixo";
     }
