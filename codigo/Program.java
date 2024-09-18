@@ -8,7 +8,6 @@ import java.util.Scanner;
 public class Program {
 
 	public static void main(String[] args) {
-
 		// Menu básico
 		Scanner scanner = new Scanner(System.in);
 
@@ -28,7 +27,7 @@ public class Program {
 				// Converteria a expressão infixo pra posfixo
 				expression.setInfixExpression(expression.toPostfix());
 				// Executa o comando/cálculo
-				expression.evaluate();
+				expression.evaluateCalculation(expression.getInfixExpression());
 			}
 			else {
 				System.out.println("Erro: comando inválido");
