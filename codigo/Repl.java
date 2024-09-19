@@ -11,9 +11,16 @@ public class Repl {
 
     // Poderia ser uma stack mas não tenho certeza
     // Comandos
-     String[] comandos = {"ERASE", "EXIT", "PLAY", "REC", "RESET", "STOP", "VARS"};
+     String[] commands = {"ERASE", "EXIT", "PLAY", "REC", "RESET", "STOP", "VARS"};
 
-    public boolean isValid() {
+    Stack<Integer> variables;
+
+     public Repl() {
+         // Variáveis criadas pelo usuário
+         variables = new Stack<>();
+     }
+
+     public boolean isValid() {
         /* Verifica se a expressão é válida
         * segundo o que o professor pede
         * TODO: Implementar verificação
