@@ -24,6 +24,20 @@ public class Repl {
      }
 
      /**
+      * Verifica se um caractere é um operador válido
+      * @param c caractere
+      * @return true se o caractere é um operador
+      */
+     private boolean isOperator(char c) {
+         for (char operator : operators) {
+             if (c == operator) {
+                 return true;
+             }
+         }
+         return false;
+     }
+
+     /**
       * Converte a entrada inicial para maíusculo e remove todos os espaços
       * @param input entrada infixa tipo " (a + 7)  "
       * @return entrada infixa formatada tipo "(A+7)"
@@ -80,7 +94,24 @@ public class Repl {
              }
          }
 
-         // TODO: Adiciona terceira validação
+         // Verifica a posição de operadores
+         // Sempre haverá um único número na stack se a operação é válida
+         Stack<Character> numbers = new Stack<>();
+         for (int i = 0; i < input.length(); i++) {
+             char c = input.charAt(i);
+            if (Character.isDigit(c)) {
+                numbers.push(c);
+            }
+            else if (isOperator(c)) {
+                if (numbers.count() < 2) {
+                    return false;
+                }
+                numbers.pop();
+             }
+         }
+         if (!(numbers.count() == 1)) {
+             return false;
+         }
 
          return inputIsValid;
     }
