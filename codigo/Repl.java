@@ -122,7 +122,14 @@ public class Repl {
 
          return inputIsValid;
     }
-    
+
+     /**
+      * Executa o comando inserido pelo usuário
+      * @param command comando inserido pelo usuário
+      */
+    public void evaluteCommand(String command) {
+         
+    }
 
 
 // MÉTODOS RASCUNHO
