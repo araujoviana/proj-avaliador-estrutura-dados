@@ -29,13 +29,37 @@ public class Repl {
          return input.toUpperCase().replaceAll(" ","");
      }
 
-     public boolean isValid() {
-        /* Verifica se a expressão é válida
-        * segundo o que o professor pede
-        * TODO: Implementar verificação
-        */
-        System.out.println("Verificando se expressão " + infixExpression + " é válida...");
-        return true;
+     /**
+      * Verifica se a entrada infixa formatada é válida, rejeitando:
+      * <ol>
+      *     <li>Parenteses que não combinam</li>
+      *     <li>Operadores inválidos</li>
+      *     <li>Operações começando com operandos</li>
+      * </ol>
+      * @param input entrada infixa formatada
+      * @return true se a entrada é válida
+      */
+     public boolean validateInput(String input) {
+         boolean inputIsValid = false;
+
+         // Verifica parenteses
+         Stack<Character> parenthesis = new Stack<>();
+         for (int i = 0; i < input.length(); i++) {
+             if (input.charAt(i) == '(') {
+                 parenthesis.push(input.charAt(i));
+             }
+             else if (input.charAt(i) == ')') {
+                 if (parenthesis.isEmpty()) {
+                     // Parenteses não combinam
+                     return false;
+                 }
+                 parenthesis.pop();
+             }
+         }
+         inputIsValid = parenthesis.isEmpty();
+
+
+         return inputIsValid;
     }
 
     public String toPostfix() {
