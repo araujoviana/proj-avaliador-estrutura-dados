@@ -96,17 +96,24 @@ public class Repl {
 
          // Verifica a posição de operadores
          // Sempre haverá um único número na stack se a operação é válida
-         Stack<Character> numbers = new Stack<>();
+         Stack<Integer> numbers = new Stack<>();
+
          for (int i = 0; i < input.length(); i++) {
              char c = input.charAt(i);
-            if (Character.isDigit(c)) {
-                numbers.push(c);
-            }
-            else if (isOperator(c)) {
-                if (numbers.count() < 2) {
-                    return false;
-                }
-                numbers.pop();
+             if (Character.isDigit(c)) {
+                 int number = 0;
+                 while (i < input.length() && Character.isDigit(input.charAt(i))) {
+                     number = number * 10 + Character.getNumericValue(input.charAt(i));
+                     i++;
+                 }
+                 i--;
+                 numbers.push(number);
+             }
+             else if (isOperator(c)) {
+                 if (numbers.isEmpty()) {
+                     return false;
+                 }
+                 numbers.pop();
              }
          }
          if (!(numbers.count() == 1)) {
@@ -115,6 +122,8 @@ public class Repl {
 
          return inputIsValid;
     }
+
+    // MÉTODOS RASCUNHO ABAIXO
 
     public String toPostfix() {
         // Converte a expressão infixa pra posfixa
