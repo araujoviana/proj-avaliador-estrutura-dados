@@ -17,19 +17,10 @@ public class Program {
 			System.out.print("> ");
 
 			String input = repl.formatInput(scanner.nextLine());
-			repl.setInfixExpression(input);
+			
+			// repl.setInfixExpression(input);
 
-			// Verifica se a expressão é válida e
-			// converte para pósfixo
-			if (repl.isValid()) {
-				// Converteria a expressão infixo pra posfixo
-				repl.setInfixExpression(repl.toPostfix());
-				// Executa o comando/cálculo
-				repl.evaluateCalculation(repl.getInfixExpression());
-			}
-			else {
-				System.out.println("Erro: comando inválido");
-            }
+
 		}
 
 		scanner.close();
