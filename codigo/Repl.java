@@ -39,7 +39,7 @@ public class Repl {
       * @param input entrada infixa formatada
       * @return true se a entrada é válida
       */
-     public boolean validateInput(String input) {
+     public boolean validateCalculationInput(String input) {
          boolean inputIsValid;
 
          // Verifica parenteses
@@ -76,6 +76,8 @@ public class Repl {
                  }
              }
          }
+
+         // TODO: Adiciona terceira validação
 
          return inputIsValid;
     }
