@@ -16,9 +16,7 @@ public class Program {
 
 			System.out.print("> ");
 
-			// Recebe o texto
-			// Converte para maiusculo
-			String input = scanner.nextLine().toUpperCase().replaceAll(" ","");
+			String input = repl.formatInput(scanner.nextLine());
 			repl.setInfixExpression(input);
 
 			// Verifica se a expressão é válida e

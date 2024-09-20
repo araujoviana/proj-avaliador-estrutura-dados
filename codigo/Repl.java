@@ -20,6 +20,15 @@ public class Repl {
          variables = new Stack<>();
      }
 
+     /**
+      * Converte a entrada inicial para maíusculo e remove todos os espaços
+      * @param input entrada infixa tipo " (a + 7)  "
+      * @return entrada infixa formatada tipo "(A+7)"
+      */
+     public String formatInput(String input) {
+         return input.toUpperCase().replaceAll(" ","");
+     }
+
      public boolean isValid() {
         /* Verifica se a expressão é válida
         * segundo o que o professor pede
