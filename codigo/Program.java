@@ -17,7 +17,12 @@ public class Program {
 			System.out.print("> ");
 
 			String input = repl.formatInput(scanner.nextLine());
-			
+
+			// Debugging
+			if (repl.validateInput(input)){
+				System.out.println("CERTO");
+			}
+			else System.out.println("ERRADO");
 			// repl.setInfixExpression(input);
 
 

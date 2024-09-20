@@ -40,7 +40,7 @@ public class Repl {
       * @return true se a entrada é válida
       */
      public boolean validateInput(String input) {
-         boolean inputIsValid = false;
+         boolean inputIsValid;
 
          // Verifica parenteses
          Stack<Character> parenthesis = new Stack<>();
@@ -58,6 +58,24 @@ public class Repl {
          }
          inputIsValid = parenthesis.isEmpty();
 
+        // Verifica operadores
+         for (int i = 0; i < input.length(); i++) {
+             char c = input.charAt(i);
+             if (!Character.isLetterOrDigit(c)) {
+                 switch (c) {
+                     case '(':
+                     case ')':
+                     case '+':
+                     case '-':
+                     case '*':
+                     case '/':
+                     case '^':
+                         continue;
+                     default:
+                         return false;
+                 }
+             }
+         }
 
          return inputIsValid;
     }
