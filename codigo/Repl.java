@@ -122,65 +122,10 @@ public class Repl {
 
          return inputIsValid;
     }
+    
 
-    // MÉTODOS RASCUNHO ABAIXO
 
-    public String toPostfix() {
-        // Converte a expressão infixa pra posfixa
-        // TODO: Implementar conversão
-        // teste
-        System.out.println("Convertendo para posfixo...");
-        return "Expressão em posfixo";
-    }
-
-    // Não vi, mas provavelmente a avaliação do cálculo
-    // precisar de mais funções
-    // TODO: Verificar valor de retorno da função
-    public void evaluateCalculation(String input) {
-        // Avalia a expressão e calcula o resultado
-        Stack<Integer> calculationStack = new Stack<>();
-
-        for (int i = 0; i < input.length(); i++) {
-            char currentElement = input.charAt(i);
-
-            // Números são empilhados
-            if (Character.isDigit(currentElement)) {
-                calculationStack.push(Character.getNumericValue(currentElement));
-                continue;
-            }
-            // TODO: Adicionar condição de converter variáveis para os seus valores respectivos
-
-            /* Operandos
-             * os últimos dois valores são desempilhados,
-             * a operação respectiva é feita
-             * e o resultado é empilhado novamente
-            */
-            Integer x = calculationStack.pop().getValue();
-            Integer y = calculationStack.pop().getValue();
-            switch (currentElement) {
-                case '+':
-                    calculationStack.push(x+y);
-                    break;
-                case '-':
-                    calculationStack.push(x-y);
-                    break;
-                case '*':
-                    calculationStack.push(x*y);
-                    break;
-                case '/':
-                    calculationStack.push(x/y);
-                    break;
-                case '%':
-                    calculationStack.push(x%y);
-                    break;
-                case '^':
-                    calculationStack.push(x^y);
-                    break;
-            }
-      System.out.println(calculationStack.pop().getValue());
-        }
-
-    }
+// MÉTODOS RASCUNHO
 
     public String getInfixExpression() {
         return infixExpression;
