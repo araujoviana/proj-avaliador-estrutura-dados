@@ -18,12 +18,7 @@ public class Program {
 
 			String input = repl.formatInput(scanner.nextLine());
 
-			// Debugging
-			if (repl.validateCalculationInput(input)){
-				System.out.println("CERTO");
-			}
-			else System.out.println("ERRADO");
-			// repl.setInfixExpression(input);
+			repl.readFormattedInput(input);
 
 
 		}

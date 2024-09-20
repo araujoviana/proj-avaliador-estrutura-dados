@@ -23,14 +23,19 @@ public class Repl {
          variables = new Stack<>();
      }
 
-     /**
-      * Verifica se um caractere é um operador válido
-      * @param c caractere
-      * @return true se o caractere é um operador
-      */
+
      private boolean isOperator(char c) {
          for (char operator : operators) {
              if (c == operator) {
+                 return true;
+             }
+         }
+         return false;
+     }
+
+     private boolean isCommand(String string) {
+         for (String command : commands) {
+             if (string.equals(command)) {
                  return true;
              }
          }
@@ -46,6 +51,23 @@ public class Repl {
          return input.toUpperCase().replaceAll(" ","");
      }
 
+     /**
+      * Lê a entrada não formatada do usuário e avalia se ela é um comando, cálculo ou atribuição de variável
+      * @param input entrada sem formatação do usuário
+      */
+     public void readFormattedInput(String input) {
+         // Verifica se entrada é um comando
+         // TODO Lidar com criação de variáveis
+         if (isCommand(input)) {
+            evaluteCommand(input);
+         }
+         else {
+             if (validateCalculationInput(input)) {
+                 // TODO
+                 System.out.println("CERTO!");
+             }
+         }
+     }
      /**
       * Verifica se a entrada infixa formatada é válida, rejeitando:
       * <ol>
@@ -128,7 +150,7 @@ public class Repl {
       * @param command comando inserido pelo usuário
       */
     public void evaluteCommand(String command) {
-         
+
     }
 
 
