@@ -3,14 +3,28 @@
  // Enzo Carvalho Pagliarini - 10425707     //
  /////////////////////////////////////////////
 
-public class Expression {
-    // Esboço incompleto da classe
+
+ // Essa classe pode ser renomeada depois
+public class Repl {
+
 	private String infixExpression = "";
 
-    public boolean isValid() {
-        // Verifica se a expressão é válida
-        // segundo o que o professor pede
-        // TODO: Implementar verificação
+    // Poderia ser uma stack mas não tenho certeza
+    // Comandos
+     String[] commands = {"ERASE", "EXIT", "PLAY", "REC", "RESET", "STOP", "VARS"};
+
+    Stack<Integer> variables;
+
+     public Repl() {
+         // Variáveis criadas pelo usuário
+         variables = new Stack<>();
+     }
+
+     public boolean isValid() {
+        /* Verifica se a expressão é válida
+        * segundo o que o professor pede
+        * TODO: Implementar verificação
+        */
         System.out.println("Verificando se expressão " + infixExpression + " é válida...");
         return true;
     }
@@ -67,6 +81,7 @@ public class Expression {
                     calculationStack.push(x^y);
                     break;
             }
+      System.out.println(calculationStack.pop().getValue());
         }
 
     }

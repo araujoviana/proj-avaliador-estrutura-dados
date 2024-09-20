@@ -8,26 +8,25 @@ import java.util.Scanner;
 public class Program {
 
 	public static void main(String[] args) {
-		// Menu básico
 		Scanner scanner = new Scanner(System.in);
 
-		Expression expression = new Expression();
+		Repl repl = new Repl();
 
-		while (!expression.getInfixExpression().equals("EXIT")){
+		while (!repl.getInfixExpression().equals("EXIT")){
 
 			System.out.print("> ");
 
 			// Recebe o texto e converte pra maiúsculo
 			String input = scanner.nextLine().toUpperCase();
-			expression.setInfixExpression(input);
+			repl.setInfixExpression(input);
 
 			// Verifica se a expressão é válida e
 			// converte para pósfixo
-			if (expression.isValid()) {
+			if (repl.isValid()) {
 				// Converteria a expressão infixo pra posfixo
-				expression.setInfixExpression(expression.toPostfix());
+				repl.setInfixExpression(repl.toPostfix());
 				// Executa o comando/cálculo
-				expression.evaluateCalculation(expression.getInfixExpression());
+				repl.evaluateCalculation(repl.getInfixExpression());
 			}
 			else {
 				System.out.println("Erro: comando inválido");
