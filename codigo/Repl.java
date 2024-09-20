@@ -4,6 +4,8 @@
  /////////////////////////////////////////////
 
 
+ import java.util.Scanner;
+
  // Essa classe pode ser renomeada depois
 public class Repl {
 
@@ -15,6 +17,10 @@ public class Repl {
 
      // Operadores válidos
     private final Character[] operators = {'+','-','*','/','^'};
+
+    // Variáveis e seus valores
+    Stack<Character> variableNames = new Stack<>();
+    Stack<Character> variableValues = new Stack<>();
 
     Stack<Integer> variables;
 
@@ -59,7 +65,7 @@ public class Repl {
          // Verifica se entrada é um comando
          // TODO Lidar com criação de variáveis
          if (isCommand(input)) {
-            evaluteCommand(input);
+            evaluateCommand(input);
          }
          else {
              if (validateCalculationInput(input)) {
@@ -68,6 +74,7 @@ public class Repl {
              }
          }
      }
+
      /**
       * Verifica se a entrada infixa formatada é válida, rejeitando:
       * <ol>
@@ -149,7 +156,48 @@ public class Repl {
       * Executa o comando inserido pelo usuário
       * @param command comando inserido pelo usuário
       */
-    public void evaluteCommand(String command) {
+    public void evaluateCommand(String command) {
+        // String[] commands = {"ERASE", "EXIT", "PLAY", "REC", "RESET", "STOP", "VARS"};
+        switch (command) {
+            case "REC":
+                startRecording();
+        }
+    }
+
+     /** Começa a gravação, armazena todos os comandos em uma fila de no máximo 10 elementos,
+      * se o comando REC é chamado novamente
+      *
+      */
+    private void startRecording() {
+        Queue<String> recordedCommands = new Queue<>(10);
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Iniciando gravação...");
+
+        while (recordedCommands.count() <= 10) {
+            System.out.println("REC: "+recordedCommands.count()+"/10)");
+
+            String input = formatInput(scanner.nextLine());
+
+            // Lida com comandos inválidos
+            if (input.equals("REC") || input.equals("PLAY")) {
+                System.out.println("Erro: comando inválido para gravação.");
+                continue;
+            }
+
+            // Adiciona entrada pra fila
+            // TODO Inserir criação de variáveis
+            if (isCommand(input)) {
+                recordedCommands.enqueue(input);
+            }
+            else {
+                if (validateCalculationInput(input)) {
+                    recordedCommands.enqueue(input);
+                }
+            }
+
+        }
+
 
     }
 
