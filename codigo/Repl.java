@@ -13,6 +13,9 @@ public class Repl {
     // Comandos
      String[] commands = {"ERASE", "EXIT", "PLAY", "REC", "RESET", "STOP", "VARS"};
 
+     // Operadores válidos
+    private final Character[] operators = {'+','-','*','/','^'};
+
     Stack<Integer> variables;
 
      public Repl() {
