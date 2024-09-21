@@ -6,12 +6,15 @@
 
  import java.util.Scanner;
 
+// TODO organizar ordem dos métodos
+
  // Essa classe pode ser renomeada depois
 public class Repl {
 
 	private String infixExpression = "";
 
-    private boolean isRecording = false;
+     private Queue<String> recordedCommands = new Queue<>(10);
+     private boolean isRecording = false;
 
     // Poderia ser uma stack mas não tenho certeza
     // Comandos
@@ -169,10 +172,20 @@ public class Repl {
                 break;
 
             case "STOP":
+                System.out.println("Parando gravação... "+" REC: "+recordedCommands.count()+"/10)");
                 isRecording = false;
                 break;
-                
 
+            case "ERASE":
+                cleanRecordedCommands();
+
+            // TODO Play
+        }
+    }
+
+    private void cleanRecordedCommands() {
+        while (!recordedCommands.isEmpty()) {
+            recordedCommands.dequeue();
         }
     }
 
@@ -181,10 +194,12 @@ public class Repl {
       *
       */
     private void startRecording() {
-        Queue<String> recordedCommands = new Queue<>(10);
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Iniciando gravação...");
+
+        // Limpa
+        cleanRecordedCommands();
 
         while (recordedCommands.count() <= 10 && isRecording) {
             System.out.println("REC: "+recordedCommands.count()+"/10)");
