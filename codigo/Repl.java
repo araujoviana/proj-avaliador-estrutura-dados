@@ -11,6 +11,8 @@ public class Repl {
 
 	private String infixExpression = "";
 
+    private boolean isRecording = false;
+
     // Poderia ser uma stack mas não tenho certeza
     // Comandos
      String[] commands = {"ERASE", "EXIT", "PLAY", "REC", "RESET", "STOP", "VARS"};
@@ -159,8 +161,18 @@ public class Repl {
     public void evaluateCommand(String command) {
         // String[] commands = {"ERASE", "EXIT", "PLAY", "REC", "RESET", "STOP", "VARS"};
         switch (command) {
+
+        // Comandos de gravação
             case "REC":
+                isRecording = true;
                 startRecording();
+                break;
+
+            case "STOP":
+                isRecording = false;
+                break;
+                
+
         }
     }
 
@@ -174,7 +186,7 @@ public class Repl {
 
         System.out.print("Iniciando gravação...");
 
-        while (recordedCommands.count() <= 10) {
+        while (recordedCommands.count() <= 10 && isRecording) {
             System.out.println("REC: "+recordedCommands.count()+"/10)");
 
             String input = formatInput(scanner.nextLine());
