@@ -11,9 +11,7 @@
  // Essa classe pode ser renomeada depois
 public class Repl {
 
-	private String infixExpression = "";
-
-     private Queue<String> recordedCommands = new Queue<>(10);
+     private final Queue<String> recordedCommands = new Queue<>(10);
      private boolean isRecording = false;
 
     // Poderia ser uma stack mas não tenho certeza
@@ -22,18 +20,6 @@ public class Repl {
 
      // Operadores válidos
     private final Character[] operators = {'+','-','*','/','^'};
-
-    // Variáveis e seus valores
-    Stack<Character> variableNames = new Stack<>();
-    Stack<Character> variableValues = new Stack<>();
-
-    Stack<Integer> variables;
-
-     public Repl() {
-         // Variáveis criadas pelo usuário
-         variables = new Stack<>();
-     }
-
 
      private boolean isOperator(char c) {
          for (char operator : operators) {
@@ -64,7 +50,7 @@ public class Repl {
 
      /**
       * Lê a entrada não formatada do usuário e avalia se ela é um comando, cálculo ou atribuição de variável
-      * @param input entrada sem formatação do usuário
+      * @param input entrada formatada do usuário
       */
      public void readFormattedInput(String input) {
          // Verifica se entrada é um comando
@@ -162,7 +148,7 @@ public class Repl {
       * @param command comando inserido pelo usuário
       */
     public void evaluateCommand(String command) {
-        // String[] commands = {"ERASE", "EXIT", "PLAY", "REC", "RESET", "STOP", "VARS"};
+
         switch (command) {
 
         // Comandos de gravação
@@ -171,15 +157,24 @@ public class Repl {
                 startRecording();
                 break;
 
-            case "STOP":
-                System.out.println("Parando gravação... "+" REC: "+recordedCommands.count()+"/10)");
-                isRecording = false;
-                break;
+            // FIXME Comando STOP é implementado direto na função startRecording
 
             case "ERASE":
+                System.out.println("Gravação apagada.");
                 cleanRecordedCommands();
+                break;
 
-            // TODO Play
+            // Executa os comandos sem apagar o conteúdo da fila
+            case "PLAY":
+                System.out.println("Reproduzindo gravação...");
+                for (int i = 0; i < recordedCommands.count(); i++) {
+                    String playedCommand = recordedCommands.dequeue();
+                    String formattedPlayedCommand = formatInput(playedCommand);
+                    System.out.println(formattedPlayedCommand);
+                    readFormattedInput(formattedPlayedCommand);
+                    recordedCommands.enqueue(formattedPlayedCommand);
+                }
+                break;
         }
     }
 
@@ -190,7 +185,7 @@ public class Repl {
     }
 
      /** Começa a gravação, armazena todos os comandos em uma fila de no máximo 10 elementos,
-      * se o comando REC é chamado novamente
+      * reinicia a fila se os comandos REC ou STOP são executados
       *
       */
     private void startRecording() {
@@ -202,19 +197,26 @@ public class Repl {
         cleanRecordedCommands();
 
         while (recordedCommands.count() <= 10 && isRecording) {
-            System.out.println("REC: "+recordedCommands.count()+"/10)");
+            System.out.println("REC: ("+recordedCommands.count()+"/10)");
+
+            System.out.print("> ");
 
             String input = formatInput(scanner.nextLine());
 
             // Lida com comandos inválidos
-            if (input.equals("REC") || input.equals("PLAY")) {
+            if (input.equals("REC") || input.equals("PLAY") || input.equals("ERASE")) {
                 System.out.println("Erro: comando inválido para gravação.");
                 continue;
             }
 
             // Adiciona entrada pra fila
             // TODO Inserir criação de variáveis
-            if (isCommand(input)) {
+            if (input.equals("STOP")) {
+                System.out.println("Parando gravação... "+" REC: ("+ recordedCommands.count()+"/10)");
+                isRecording = false;
+                break;
+            }
+            else if (isCommand(input)) {
                 recordedCommands.enqueue(input);
             }
             else {
@@ -227,17 +229,5 @@ public class Repl {
 
 
     }
-
-
-// MÉTODOS RASCUNHO
-
-    public String getInfixExpression() {
-        return infixExpression;
-    }
-
-    public void setInfixExpression(String infixExpression) {
-        this.infixExpression = infixExpression;
-    }
-
 
 }

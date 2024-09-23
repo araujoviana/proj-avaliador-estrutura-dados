@@ -10,13 +10,16 @@ public class Program {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 
+		// TODO Remover essa declaração daqui e arrumar a condição while
+		String input = "";
+
 		Repl repl = new Repl();
 
-		while (!repl.getInfixExpression().equals("EXIT")){
+		while (!input.equals("EXIT")){
 
 			System.out.print("> ");
 
-			String input = repl.formatInput(scanner.nextLine());
+			input = repl.formatInput(scanner.nextLine());
 
 			repl.readFormattedInput(input);
 
