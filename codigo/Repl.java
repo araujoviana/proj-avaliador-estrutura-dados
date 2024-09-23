@@ -175,6 +175,8 @@ public class Repl {
                     recordedCommands.enqueue(formattedPlayedCommand);
                 }
                 break;
+
+            // Comando EXIT é implementado na classe Program
         }
     }
 
@@ -228,6 +230,42 @@ public class Repl {
         }
 
 
+    }
+
+     /**
+      * Executa o cálculo formatado em pósfixo usando uma pilha e retorna o resultado
+      * @param postfix cálculo do usuário formatado em pósfixo tipo: "AB+CD-/E*"
+      * @return resultado final
+      */
+    private Float evaluatePostfixCalculation(String postfix) {
+        Stack<Float> result = new Stack<>();
+
+        // TODO atribuir valores númericos às variáveis da expressão a ser avaliada
+
+        for (int i = 0; i < postfix.length(); i++) {
+            char c = postfix.charAt(i);
+
+            // Empilha operandos
+            if (Character.isDigit(c)) {
+                String number = "";
+
+                while (i < postfix.length() && Character.isDigit(postfix.charAt(i))) {
+                    number += postfix.charAt(i); 
+                    i++;
+                }
+
+                // Push the complete number to the stack
+                result.push(Float.parseFloat(number));
+            }
+
+            // TODO terminar parte com operadores
+            if (isOperator(c)) {
+                Float firstNumber = result.pop().getValue();
+                Float secondNumber = result.pop().getValue();
+            }
+        }
+
+        return result.pop().getValue();
     }
 
 }
