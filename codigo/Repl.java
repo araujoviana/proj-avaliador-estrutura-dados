@@ -42,6 +42,16 @@ public class Repl {
          return false;
      }
 
+     private boolean isVariableName(Character character) {
+         for (Character variableName : variableNames) {
+             if (character.equals(variableName)) {
+                 return true;
+             }
+         }
+         return false;
+     }
+
+
      /**
       * Converte a entrada inicial para maíusculo e remove todos os espaços
       * @param input entrada infixa tipo " (a + 7)  "
@@ -101,7 +111,7 @@ public class Repl {
         // Verifica operadores
          for (int i = 0; i < input.length(); i++) {
              char c = input.charAt(i);
-             if (!Character.isLetterOrDigit(c)) {
+             if (!Character.isLetter(c)) {
                  switch (c) {
                      case '(':
                      case ')':
@@ -115,6 +125,11 @@ public class Repl {
                          return false;
                  }
              }
+         }
+
+         // Verifica se a variável acessada foi definida
+         for (int i = 0; i < input.length(); i++) {
+
          }
 
          // Verifica a posição de operadores
