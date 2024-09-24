@@ -228,8 +228,25 @@
      * @param input entrada formatada do usuário
      */
     public void readFormattedInput(String input) {
+        // Verifica se a entrada é vazia
+        if (input.isEmpty()) {
+            return;
+        }
+        // Verifica se a entrada é uma única variável
+        if (input.length() == 1) {
+            if (isVariableName(input.charAt(0))) {
+                for (int i = 0; i < variableCount; i++) {
+                    if (variableNames[i] == input.charAt(0)) {
+                        System.out.println(variableValues[i]);
+                    }
+                }
+            }
+            else {
+                printError("impossível verificar o valor de " + input.charAt(0));
+            }
+        }
         // Verifica se entrada é um comando
-        if (isCommand(input)) {
+        else if (isCommand(input)) {
             evaluateCommand(input);
         }
         // Verifica definição de variável
@@ -375,7 +392,6 @@
                 for (int i = 0; i < recordedCommands.count(); i++) {
                     String playedCommand = recordedCommands.dequeue();
                     String formattedPlayedCommand = formatInput(playedCommand);
-                    System.out.println(formattedPlayedCommand);
                     readFormattedInput(formattedPlayedCommand);
                     recordedCommands.enqueue(formattedPlayedCommand);
                 }
@@ -390,19 +406,26 @@
 
 
      /** Começa a gravação, armazena todos os comandos em uma fila de no máximo 10 elementos,
-      * reinicia a fila se os comandos REC ou STOP são executados
-      *
+      * reinicia a fila se os comandos REC ou ERASE são executados
       */
     private void startRecording() {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Iniciando gravação...");
 
-        // Limpa
+        // Limpa fila
         cleanRecordedCommands();
 
-        while (recordedCommands.count() <= 10 && isRecording) {
+        while (isRecording) {
+
             System.out.println("REC: ("+recordedCommands.count()+"/10)");
+
+            // Verifica se fila de comandos está cheia
+            if (recordedCommands.isFull()) {
+                printError("fila de comandos cheia");
+                isRecording = false;
+                return;
+            }
 
             System.out.print("> ");
 
@@ -420,21 +443,15 @@
                 isRecording = false;
                 break;
             }
-            // Verifica comandos
-            else if (isCommand(input)) {
-                recordedCommands.enqueue(input);
+
+            // Leitura normal da entrada
+            // Verifica se a entrada é vazia
+            if (input.isEmpty()) {
+                continue;
             }
-            // Verifica definição de variável
-            else if (isVariableDefinition(input)) {
-                recordedCommands.enqueue(input);
-            }
-            // Verifica cálculos
-            else if (isCalculation(input)) {
-                recordedCommands.enqueue(input);
-            }
-            else {
-                printError("entrada inválida.");
-            }
+
+            // Grava entrada
+            recordedCommands.enqueue(input);
 
 
         }
