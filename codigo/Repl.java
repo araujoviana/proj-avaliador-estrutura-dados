@@ -144,28 +144,28 @@ public class Repl {
          }
 
          // Verifica a posição de operadores
-         // Sempre haverá um único número na stack se a operação é válida
-         Stack<Integer> numbers = new Stack<>();
+         // Sempre haverá uma única variável na stack se a operação é válida
+         Stack<Character> variables = new Stack<>();
 
          for (int i = 0; i < input.length(); i++) {
              char c = input.charAt(i);
-             if (Character.isDigit(c)) {
-                 int number = 0;
-                 while (i < input.length() && Character.isDigit(input.charAt(i))) {
-                     number = number * 10 + Character.getNumericValue(input.charAt(i));
-                     i++;
-                 }
-                 i--;
-                 numbers.push(number);
+
+             // Verifica se o caractere é uma variável (letras)
+             if (Character.isLetter(c)) {
+                 variables.push(c);
              }
+             // Verifica se o caractere é um operador
              else if (isOperator(c)) {
-                 if (numbers.isEmpty()) {
+                 // Se a pilha estiver vazia, a operação é inválida
+                 if (variables.isEmpty()) {
                      return false;
                  }
-                 numbers.pop();
+                 variables.pop();
              }
          }
-         if (!(numbers.count() == 1)) {
+
+         // No final, deve haver apenas uma variável restante na pilha
+         if (!(variables.size() == 1)) {
              return false;
          }
 
