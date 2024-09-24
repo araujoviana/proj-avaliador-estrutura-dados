@@ -12,47 +12,20 @@
 public class Repl {
 
     private final int MAX_VARIABLES = 26;
-
-    private final Queue<String> recordedCommands = new Queue<>(10);
-    private boolean isRecording = false;
-
-    // Poderia ser uma stack mas não tenho certeza
-    // Comandos
-     String[] commands = {"ERASE", "EXIT", "PLAY", "REC", "RESET", "STOP", "VARS"};
-
-     // Operadores válidos
-    private final Character[] operators = {'+','-','*','/','^'};
-
     private final Character[] variableNames = new Character[MAX_VARIABLES];
     private final float[] variableValues = new float[MAX_VARIABLES];
     private int variableCount = 0;
 
-    /**
-     * Armazena o valor de uma variável
-     * @param name nome da variável
-     * @param value valor da variável
-     */
-    public void storeVariable(Character name, float value) {
-        // Verifica se a variável já existe para atualizá-la
-        for (int i = 0; i < variableCount; i++) {
-            if (variableNames[i] == name) {
-                variableValues[i] = value;
-                return;
-            }
-        }
+    // Poderia ser uma stack mas não tenho certeza
+    // Comandos
+    private final String[] commands = {"ERASE", "EXIT", "PLAY", "REC", "RESET", "STOP", "VARS"};
 
-        // Se a variável não existir, adiciona uma nova
-        if (variableCount < MAX_VARIABLES) {
-            variableNames[variableCount] = name;
-            variableValues[variableCount] = value;
-            variableCount++;
-        } else {
-            // TODO Arrumar essa mensagem de erro, contextualizar melhor
-            System.out.println("Erro: número máximo de variáveis atingido.");
-        }
-    }
+    private final Queue<String> recordedCommands = new Queue<>(10);
+    private boolean isRecording = false;
 
-
+    // Operadores válidos
+    private final Character[] operators = {'+','-','*','/','^'};
+    
     private boolean isOperator(char c) {
          for (char operator : operators) {
              if (c == operator) {
@@ -81,14 +54,6 @@ public class Repl {
      }
 
 
-     /**
-      * Converte a entrada inicial para maíusculo e remove todos os espaços
-      * @param input entrada infixa tipo " (a + 7)  "
-      * @return entrada infixa formatada tipo "(A+7)"
-      */
-     public String formatInput(String input) {
-         return input.toUpperCase().replaceAll(" ","");
-     }
 
     /**
      * Verifica se a entrada é uma definição válida de variável.
@@ -122,6 +87,135 @@ public class Repl {
             return isNumber;
         }
         return false;
+    }
+
+
+    /**
+     * Armazena o valor de uma variável
+     * @param name nome da variável
+     * @param value valor da variável
+     */
+    public void storeVariable(Character name, float value) {
+        // Verifica se a variável já existe para atualizá-la
+        for (int i = 0; i < variableCount; i++) {
+            if (variableNames[i] == name) {
+                variableValues[i] = value;
+                return;
+            }
+        }
+
+        // Se a variável não existir, adiciona uma nova
+        if (variableCount < MAX_VARIABLES) {
+            variableNames[variableCount] = name;
+            variableValues[variableCount] = value;
+            variableCount++;
+        } else {
+            // TODO Arrumar essa mensagem de erro, contextualizar melhor
+            System.out.println("Erro: número máximo de variáveis atingido.");
+        }
+    }
+
+
+    /**
+     * Converte a entrada inicial para maíusculo e remove todos os espaços
+     * @param input entrada infixa tipo " (a + 7)  "
+     * @return entrada infixa formatada tipo "(A+7)"
+     */
+    public String formatInput(String input) {
+        return input.toUpperCase().replaceAll(" ","");
+    }
+
+
+    /**
+     * Verifica se a entrada infixa formatada é válida, rejeitando:
+     * <ol>
+     *     <li>Contas usando números ao invés de variáveis</li>
+     *     <li>Parenteses que não combinam</li>
+     *     <li>Operadores inválidos</li>
+     *     <li>Variáveis indefinidas</li>
+     *     <li>Operações começando com operandos</li>
+     * </ol>
+     * @param input entrada infixa formatada
+     * @return true se a entrada é válida
+     */
+    public boolean validateCalculationInput(String input) {
+        boolean inputIsValid;
+
+        // Verifica a presença de números
+        for (int i = 0; i < input.length(); i++) {
+            if (Character.isDigit(input.charAt(i))) {
+                return false;
+            }
+        }
+
+        // Verifica parenteses
+        Stack<Character> parenthesis = new Stack<>();
+        for (int i = 0; i < input.length(); i++) {
+            if (input.charAt(i) == '(') {
+                parenthesis.push(input.charAt(i));
+            }
+            else if (input.charAt(i) == ')') {
+                if (parenthesis.isEmpty()) {
+                    // Parenteses não combinam
+                    return false;
+                }
+                parenthesis.pop();
+            }
+        }
+        inputIsValid = parenthesis.isEmpty();
+
+        // Verifica operadores
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            if (!Character.isLetter(c)) {
+                switch (c) {
+                    case '(':
+                    case ')':
+                    case '+':
+                    case '-':
+                    case '*':
+                    case '/':
+                    case '^':
+                        continue;
+                    default:
+                        return false;
+                }
+            }
+        }
+
+        // Verifica se as variáveis acessadas foram definidas
+        for (int i = 0; i < input.length(); i++) {
+            if (Character.isLetter(input.charAt(i))) {
+                if (!isVariableName(input.charAt(i))) {
+                    return false;
+                }
+            }
+        }
+
+        // Verifica a posição de operadores
+        // Sempre haverá uma única variável na stack se a operação é válida
+        Stack<Character> variables = new Stack<>();
+
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+
+            if (Character.isLetter(c)) {
+                variables.push(c);
+            }
+            else if (isOperator(c)) {
+                if (variables.isEmpty()) {
+                    return false;
+                }
+                variables.pop();
+            }
+        }
+
+        // No final, deve haver apenas uma variável restante na pilha
+        if (!(variables.size() == 1)) {
+            return false;
+        }
+
+        return inputIsValid;
     }
 
     /**
@@ -161,99 +255,59 @@ public class Repl {
         }
     }
 
-     /**
-      * Verifica se a entrada infixa formatada é válida, rejeitando:
-      * <ol>
-      *     <li>Contas usando números ao invés de variáveis</li>
-      *     <li>Parenteses que não combinam</li>
-      *     <li>Operadores inválidos</li>
-      *     <li>Variáveis indefinidas</li>
-      *     <li>Operações começando com operandos</li>
-      * </ol>
-      * @param input entrada infixa formatada
-      * @return true se a entrada é válida
-      */
-     public boolean validateCalculationInput(String input) {
-         boolean inputIsValid;
+    /**
+     * Executa o cálculo formatado em pósfixo usando uma pilha e retorna o resultado
+     * @param postfix cálculo do usuário formatado em pósfixo tipo: "AB+CD-/E*"
+     * @return resultado final
+     */
+    private Float evaluatePostfixCalculation(String postfix) {
+        Stack<Float> result = new Stack<>();
 
-         // Verifica a presença de números
-         for (int i = 0; i < input.length(); i++) {
-             if (Character.isDigit(input.charAt(i))) {
-                 return false;
-             }
-         }
+        // TODO atribuir valores númericos às variáveis da expressão a ser avaliada
 
-         // Verifica parenteses
-         Stack<Character> parenthesis = new Stack<>();
-         for (int i = 0; i < input.length(); i++) {
-             if (input.charAt(i) == '(') {
-                 parenthesis.push(input.charAt(i));
-             }
-             else if (input.charAt(i) == ')') {
-                 if (parenthesis.isEmpty()) {
-                     // Parenteses não combinam
-                     return false;
-                 }
-                 parenthesis.pop();
-             }
-         }
-         inputIsValid = parenthesis.isEmpty();
+        for (int i = 0; i < postfix.length(); i++) {
+            char c = postfix.charAt(i);
 
-        // Verifica operadores
-         for (int i = 0; i < input.length(); i++) {
-             char c = input.charAt(i);
-             if (!Character.isLetter(c)) {
-                 switch (c) {
-                     case '(':
-                     case ')':
-                     case '+':
-                     case '-':
-                     case '*':
-                     case '/':
-                     case '^':
-                         continue;
-                     default:
-                         return false;
-                 }
-             }
-         }
+            // FIXME deveria lidar APENAS com variáveis
+            // Empilha operandos
+            if (Character.isDigit(c)) {
+                String number = "";
 
-         // Verifica se as variáveis acessadas foram definidas
-         for (int i = 0; i < input.length(); i++) {
-             if (Character.isLetter(input.charAt(i))) {
-                 if (!isVariableName(input.charAt(i))) {
-                     return false;
-                 }
-             }
-         }
+                while (i < postfix.length() && Character.isDigit(postfix.charAt(i))) {
+                    number += postfix.charAt(i);
+                    i++;
+                }
 
-         // Verifica a posição de operadores
-         // Sempre haverá uma única variável na stack se a operação é válida
-         Stack<Character> variables = new Stack<>();
+                result.push(Float.parseFloat(number));
+            }
 
-         for (int i = 0; i < input.length(); i++) {
-             char c = input.charAt(i);
+            if (isOperator(c)) {
+                Float firstNumber = result.pop().getValue();
+                Float secondNumber = result.pop().getValue();
 
-             if (Character.isLetter(c)) {
-                 variables.push(c);
-             }
-             else if (isOperator(c)) {
-                 if (variables.isEmpty()) {
-                     return false;
-                 }
-                 variables.pop();
-             }
-         }
+                switch (c) {
+                    case '+':
+                        result.push(firstNumber + secondNumber);
+                        break;
+                    case '-':
+                        result.push(firstNumber - secondNumber);
+                        break;
+                    case '*':
+                        result.push(firstNumber * secondNumber);
+                        break;
+                    case '/':
+                        result.push(firstNumber / secondNumber);
+                        break;
+                    case '^':
+                        result.push((float) Math.pow(firstNumber,secondNumber));
+                }
+            }
+        }
 
-         // No final, deve haver apenas uma variável restante na pilha
-         if (!(variables.size() == 1)) {
-             return false;
-         }
-
-         return inputIsValid;
+        return result.pop().getValue();
     }
 
-     /**
+    /**
       * Executa o comando inserido pelo usuário
       * @param command comando inserido pelo usuário
       */
@@ -261,7 +315,12 @@ public class Repl {
 
         switch (command) {
 
-        // Comandos de gravação
+            // Comandos de variáveis
+            // TODO VARS
+            // TODO RESET
+
+
+            // Comandos de gravação
             case "REC":
                 isRecording = true;
                 startRecording();
@@ -290,11 +349,6 @@ public class Repl {
         }
     }
 
-    private void cleanRecordedCommands() {
-        while (!recordedCommands.isEmpty()) {
-            recordedCommands.dequeue();
-        }
-    }
 
      /** Começa a gravação, armazena todos os comandos em uma fila de no máximo 10 elementos,
       * reinicia a fila se os comandos REC ou STOP são executados
@@ -342,56 +396,10 @@ public class Repl {
 
     }
 
-     /**
-      * Executa o cálculo formatado em pósfixo usando uma pilha e retorna o resultado
-      * @param postfix cálculo do usuário formatado em pósfixo tipo: "AB+CD-/E*"
-      * @return resultado final
-      */
-    private Float evaluatePostfixCalculation(String postfix) {
-        Stack<Float> result = new Stack<>();
-
-        // TODO atribuir valores númericos às variáveis da expressão a ser avaliada
-
-        for (int i = 0; i < postfix.length(); i++) {
-            char c = postfix.charAt(i);
-
-            // FIXME deveria lidar APENAS com variáveis
-            // Empilha operandos
-            if (Character.isDigit(c)) {
-                String number = "";
-
-                while (i < postfix.length() && Character.isDigit(postfix.charAt(i))) {
-                    number += postfix.charAt(i);
-                    i++;
-                }
-
-                result.push(Float.parseFloat(number));
-            }
-
-            if (isOperator(c)) {
-                Float firstNumber = result.pop().getValue();
-                Float secondNumber = result.pop().getValue();
-
-                switch (c) {
-                    case '+':
-                        result.push(firstNumber + secondNumber);
-                        break;
-                    case '-':
-                        result.push(firstNumber - secondNumber);
-                        break;
-                    case '*':
-                        result.push(firstNumber * secondNumber);
-                        break;
-                    case '/':
-                        result.push(firstNumber / secondNumber);
-                        break;
-                    case '^':
-                        result.push((float) Math.pow(firstNumber,secondNumber));
-                }
-            }
+    private void cleanRecordedCommands() {
+        while (!recordedCommands.isEmpty()) {
+            recordedCommands.dequeue();
         }
-
-        return result.pop().getValue();
     }
 
 }
