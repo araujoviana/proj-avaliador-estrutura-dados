@@ -61,22 +61,70 @@ public class Repl {
          return input.toUpperCase().replaceAll(" ","");
      }
 
-     /**
-      * Lê a entrada não formatada do usuário e avalia se ela é um comando, cálculo ou atribuição de variável
-      * @param input entrada formatada do usuário
-      */
-     public void readFormattedInput(String input) {
-         // Verifica se entrada é um comando
-         // TODO Lidar com criação de variáveis
-         if (isCommand(input)) {
+    /**
+     * Verifica se a entrada é uma definição válida de variável.
+     * @param input entrada do usuário
+     * @return true se for uma atribuição válida
+     */
+    public boolean isVariableDefinition(String input) {
+        // Verifica se o formato é uma atribuição de variável (letra seguida de '=' e um número)
+        if (Character.isLetter(input.charAt(0)) && input.charAt(1) == '=' && Character.isDigit(input.charAt(2))) {
+            boolean isNumber = true;
+            boolean hasDecimalPoint = false;
+
+            // Verifica os caracteres restantes após o '='
+            for (int i = 2; i < input.length(); i++) {
+                char c = input.charAt(i);
+
+                // Verifica se é um ponto decimal e se já existe um
+                if (c == '.') {
+                    if (hasDecimalPoint) {
+                        isNumber = false;
+                        break;
+                    }
+                    hasDecimalPoint = true;
+                }
+                else if (!Character.isDigit(c)) {
+                    isNumber = false;
+                    break;
+                }
+            }
+
+            return isNumber;
+        }
+        return false;
+    }
+
+    /**
+     * Lê a entrada não formatada do usuário e avalia se ela é um comando, cálculo ou atribuição de variável
+     * @param input entrada formatada do usuário
+     */
+    public void readFormattedInput(String input) {
+        // Verifica se entrada é um comando
+        if (isCommand(input)) {
             evaluateCommand(input);
-         }
-         else {
-             if (validateCalculationInput(input)) {
-                 
-             }
-         }
-     }
+        }
+        else {
+            // Verifica definição de variável
+            if (isVariableDefinition(input)) {
+                // DEBUG
+                System.out.println("DELETE ME Atribuição válida de número.");
+                System.exit(0);
+            }
+            // Verifica cálculo
+            else if (validateCalculationInput(input)) {
+                // TODO
+                // - Converter para pósfixo
+                // - Fazer o cálculo
+
+                // print temporário
+                System.out.println("VALIDADO!");
+            }
+            else {
+                System.out.println("Erro: Entrada inválida");
+            }
+        }
+    }
 
      /**
       * Verifica se a entrada infixa formatada é válida, rejeitando:
