@@ -22,19 +22,6 @@ public class Program {
 
 			repl.readFormattedInput(input);
 
-
-
-//			// DEBUG evaluatePostfixCalculation
-//			repl.readFormattedInput("A=10");
-//			repl.readFormattedInput("B=3");
-//			System.out.println(repl.evaluatePostfixCalculation("AB*"));
-//			System.out.println(repl.evaluatePostfixCalculation("AB+"));
-//			System.out.println(repl.evaluatePostfixCalculation("AB-"));
-//			System.out.println(repl.evaluatePostfixCalculation("AB/"));
-//			System.out.println(repl.evaluatePostfixCalculation("AB^"));
-//			input = "EXIT";
-
-
 		}
 
 		scanner.close();

@@ -21,8 +21,9 @@
 
     // Operadores válidos
     private final Character[] operators = {'+','-','*','/','^'};
-    
-    private boolean isOperator(char c) {
+
+     // Verifica se um caractere é um dos operadores válidos em operators
+     private boolean isOperator(char c) {
          for (char operator : operators) {
              if (c == operator) {
                  return true;
@@ -31,6 +32,7 @@
          return false;
      }
 
+     // Verifica se uma String é um dos comandos válidos em commands
      private boolean isCommand(String string) {
          for (String command : commands) {
              if (string.equals(command)) {
@@ -40,6 +42,7 @@
          return false;
      }
 
+     // Verifica se uma String é um caractere é o nome de uma váriavel definida
      private boolean isVariableName(Character character) {
          for (Character variableName : variableNames) {
              if (character.equals(variableName)) {
@@ -49,11 +52,10 @@
          return false;
      }
 
-
-
     /**
      * Verifica se a entrada é uma definição válida de variável.
-     * @param input entrada do usuário
+     * Variáveis são válidas se seguem a estrutura <LETRA>=<NÚMERO REAL>
+     * @param input string formatada do usuário
      * @return true se for uma atribuição válida
      */
     public boolean isVariableDefinition(String input) {
@@ -182,6 +184,7 @@
         for (int i = 0; i < input.length(); i++) {
             if (Character.isLetter(input.charAt(i))) {
                 if (!isVariableName(input.charAt(i))) {
+                    printError("variável "+input.charAt(i)+" não definida.");
                     return false;
                 }
             }
@@ -206,7 +209,7 @@
         }
 
         // No final, deve haver apenas uma variável restante na pilha
-        if (!(variables.size() == 1)) {
+        if (!(variables.count() == 1)) {
             return false;
         }
 
@@ -242,11 +245,12 @@
 
                 // Temporário enquanto o métod\o não existe
                 postfixInput = "AB+";
-                evaluatePostfixCalculation(postfixInput);
+
+                System.out.println(evaluatePostfixCalculation(postfixInput));
 
             }
             else {
-                printError("Entrada inválida");
+                printError("comando inválido");
             }
         }
     }
@@ -396,7 +400,7 @@
             String input = formatInput(scanner.nextLine());
 
             // Lida com comandos inválidos
-            if (input.equals("REC") || input.equals("PLAY") || input.equals("ERASE")) {
+            if (input.equals("REC") || input.equals("PLAY") || input.equals("ERASE") || input.equals("EXIT")) {
                 printError("Comando inválido para gravação");
                 continue;
             }
@@ -428,7 +432,7 @@
                     recordedCommands.enqueue(input);
             }
             else {
-                printError("entrada inválida.");
+                printError("comando inválido.");
             }
 
 
