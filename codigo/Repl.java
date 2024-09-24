@@ -328,8 +328,13 @@ public class Repl {
                 }
                 break;
 
-            // TODO RESET
-
+            case "RESET":
+                for (int i = 0; i < variableNames.length; i++) {
+                    variableNames[i] = null;
+                    variableValues[i] = 0;
+                }
+                System.out.println("Variáveis reiniciadas.");
+                break;
 
             // Comandos de gravação
             case "REC":
