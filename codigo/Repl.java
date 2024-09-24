@@ -316,7 +316,18 @@ public class Repl {
         switch (command) {
 
             // Comandos de variáveis
-            // TODO VARS
+            case "VARS":
+                if (variableNames[0] == null) {
+                    System.out.println("Nenhuma variável definida");
+                    break;
+                }
+                for (int i = 0; i < variableNames.length; i++) {
+                    if (variableNames[i] != null) {
+                        System.out.println(variableNames[i] + " = " + variableValues[i]);
+                    }
+                }
+                break;
+
             // TODO RESET
 
 
