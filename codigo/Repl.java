@@ -106,7 +106,7 @@
             variableValues[variableCount] = value;
             variableCount++;
         } else {
-            throwError("número máximo de variáveis atingido");
+            printError("número máximo de variáveis atingido");
         }
     }
 
@@ -246,7 +246,7 @@
 
             }
             else {
-                throwError("Entrada inválida");
+                printError("Entrada inválida");
             }
         }
     }
@@ -262,15 +262,24 @@
         for (int i = 0; i < postfix.length(); i++) {
             char c = postfix.charAt(i);
 
+
             // Empilha o valor da variável
             if (Character.isLetter(c)) {
+                boolean variableFound = false;
+
                 // Encontra o índice da variável no array de nomes
                 for (int j = 0; j < variableCount; j++) {
                     if (variableNames[j] == c) {
                         // Empilha o valor da variável correspondente
                         result.push(variableValues[j]);
+                        variableFound = true;
                         break;
                     }
+                }
+
+                // Se a variável não for encontrada, lança um erro ou imprime uma mensagem
+                if (!variableFound) {
+                    printError("uso de variável indefinida.");
                 }
             }
 
@@ -311,7 +320,7 @@
             // Comandos de variáveis
             case "VARS":
                 if (variableNames[0] == null) {
-                    throwError("nenhuma variável definida.");
+                    printError("nenhuma variável definida.");
                     break;
                 }
                 for (int i = 0; i < variableNames.length; i++) {
@@ -345,7 +354,7 @@
             case "PLAY":
 
                 if (recordedCommands.isEmpty()) {
-                    throwError("Não há gravação para ser reproduzida");
+                    printError("Não há gravação para ser reproduzida");
                     break;
                 }
 
@@ -388,7 +397,7 @@
 
             // Lida com comandos inválidos
             if (input.equals("REC") || input.equals("PLAY") || input.equals("ERASE")) {
-                throwError("Comando inválido para gravação");
+                printError("Comando inválido para gravação");
                 continue;
             }
 
@@ -419,7 +428,7 @@
                     recordedCommands.enqueue(input);
             }
             else {
-                throwError("entrada inválida.");
+                printError("entrada inválida.");
             }
 
 
@@ -436,7 +445,7 @@
     }
 
     // Imprime erros para o usuário
-     private void throwError(String error) {
+     private void printError(String error) {
          System.out.println("Erro: " + error);
      }
 
