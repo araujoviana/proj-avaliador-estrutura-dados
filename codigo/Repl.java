@@ -7,7 +7,7 @@
  import java.util.Scanner;
 
 // TODO organizar ordem dos métodos
-
+// TODO Criar sistema de erros
  // Essa classe pode ser renomeada depois
 public class Repl {
 
@@ -92,6 +92,13 @@ public class Repl {
      public boolean validateCalculationInput(String input) {
          boolean inputIsValid;
 
+         // Verifica a presença de números
+         for (int i = 0; i < input.length(); i++) {
+             if (Character.isDigit(input.charAt(i))) {
+                 return false;
+             }
+         }
+
          // Verifica parenteses
          Stack<Character> parenthesis = new Stack<>();
          for (int i = 0; i < input.length(); i++) {
@@ -127,9 +134,13 @@ public class Repl {
              }
          }
 
-         // Verifica se a variável acessada foi definida
+         // Verifica se as variáveis acessadas foram definidas
          for (int i = 0; i < input.length(); i++) {
-
+             if (Character.isLetter(input.charAt(i))) {
+                 if (!isVariableName(input.charAt(i))) {
+                     return false;
+                 }
+             }
          }
 
          // Verifica a posição de operadores
@@ -255,7 +266,7 @@ public class Repl {
       * @param postfix cálculo do usuário formatado em pósfixo tipo: "AB+CD-/E*"
       * @return resultado final
       */
-    public Float evaluatePostfixCalculation(String postfix) {
+    private Float evaluatePostfixCalculation(String postfix) {
         Stack<Float> result = new Stack<>();
 
         // TODO atribuir valores númericos às variáveis da expressão a ser avaliada
