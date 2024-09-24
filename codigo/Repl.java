@@ -6,8 +6,6 @@
 
  import java.util.Scanner;
 
-// TODO Criar sistema de erros
-
  public class Repl {
 
     private final int MAX_VARIABLES = 26;
@@ -395,20 +393,35 @@
             }
 
             // Adiciona entrada pra fila
-            // TODO Inserir criação de variáveis
             if (input.equals("STOP")) {
                 System.out.println("Parando gravação... "+" REC: ("+ recordedCommands.count()+"/10)");
                 isRecording = false;
                 break;
             }
+            // Verifica comandos
             else if (isCommand(input)) {
                 recordedCommands.enqueue(input);
             }
-            else {
-                if (validateCalculationInput(input)) {
-                    recordedCommands.enqueue(input);
-                }
+            // Verifica definição de variável
+            else if (isVariableDefinition(input)) {
+                // Extraí o nome da variável
+                Character variableName = input.charAt(0);
+
+                // Extrai o valor da variável (parte após '=')
+                String valueString = input.substring(2);
+                float value = Float.parseFloat(valueString);
+                storeVariable(variableName, value);
+
+                System.out.println(input);
             }
+            // Verifica cálculos
+            else if (validateCalculationInput(input)) {
+                    recordedCommands.enqueue(input);
+            }
+            else {
+                throwError("entrada inválida.");
+            }
+
 
         }
 
