@@ -308,7 +308,7 @@ public class Repl {
     }
 
     /**
-      * Executa o comando inserido pelo usuário
+      * Executa o comando inserido pelo usuário, comandos mais complexos usam métodos separados
       * @param command comando inserido pelo usuário
       */
     public void evaluateCommand(String command) {
@@ -351,6 +351,12 @@ public class Repl {
 
             // Executa os comandos sem apagar o conteúdo da fila
             case "PLAY":
+
+                if (recordedCommands.isEmpty()) {
+                    System.out.println("Não há gravação para ser reproduzida");
+                    break;
+                }
+
                 System.out.println("Reproduzindo gravação...");
                 for (int i = 0; i < recordedCommands.count(); i++) {
                     String playedCommand = recordedCommands.dequeue();
