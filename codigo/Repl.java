@@ -73,8 +73,7 @@ public class Repl {
          }
          else {
              if (validateCalculationInput(input)) {
-                 // TODO
-                 System.out.println("CERTO!");
+                 
              }
          }
      }
@@ -82,8 +81,10 @@ public class Repl {
      /**
       * Verifica se a entrada infixa formatada é válida, rejeitando:
       * <ol>
+      *     <li>Contas usando números ao invés de variáveis</li>
       *     <li>Parenteses que não combinam</li>
       *     <li>Operadores inválidos</li>
+      *     <li>Variáveis indefinidas</li>
       *     <li>Operações começando com operandos</li>
       * </ol>
       * @param input entrada infixa formatada
@@ -150,13 +151,10 @@ public class Repl {
          for (int i = 0; i < input.length(); i++) {
              char c = input.charAt(i);
 
-             // Verifica se o caractere é uma variável (letras)
              if (Character.isLetter(c)) {
                  variables.push(c);
              }
-             // Verifica se o caractere é um operador
              else if (isOperator(c)) {
-                 // Se a pilha estiver vazia, a operação é inválida
                  if (variables.isEmpty()) {
                      return false;
                  }
