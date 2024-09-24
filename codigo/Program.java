@@ -15,12 +15,24 @@ public class Program {
 		Repl repl = new Repl();
 
 		while (!input.equals("EXIT")){
-
+			// Execução ideal
 			System.out.print("> ");
 
 			input = repl.formatInput(scanner.nextLine());
 
 			repl.readFormattedInput(input);
+
+
+
+//			// DEBUG evaluatePostfixCalculation
+//			repl.readFormattedInput("A=10");
+//			repl.readFormattedInput("B=3");
+//			System.out.println(repl.evaluatePostfixCalculation("AB*"));
+//			System.out.println(repl.evaluatePostfixCalculation("AB+"));
+//			System.out.println(repl.evaluatePostfixCalculation("AB-"));
+//			System.out.println(repl.evaluatePostfixCalculation("AB/"));
+//			System.out.println(repl.evaluatePostfixCalculation("AB^"));
+//			input = "EXIT";
 
 
 		}

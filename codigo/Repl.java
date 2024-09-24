@@ -6,17 +6,15 @@
 
  import java.util.Scanner;
 
-// TODO organizar ordem dos métodos
 // TODO Criar sistema de erros
- // Essa classe pode ser renomeada depois
-public class Repl {
+
+ public class Repl {
 
     private final int MAX_VARIABLES = 26;
     private final Character[] variableNames = new Character[MAX_VARIABLES];
     private final float[] variableValues = new float[MAX_VARIABLES];
     private int variableCount = 0;
 
-    // Poderia ser uma stack mas não tenho certeza
     // Comandos
     private final String[] commands = {"ERASE", "EXIT", "PLAY", "REC", "RESET", "STOP", "VARS"};
 
@@ -91,7 +89,7 @@ public class Repl {
 
 
     /**
-     * Armazena o valor de uma variável
+     * Armazena o valor de uma variável nos vetores Variable
      * @param name nome da variável
      * @param value valor da variável
      */
@@ -110,8 +108,7 @@ public class Repl {
             variableValues[variableCount] = value;
             variableCount++;
         } else {
-            // TODO Arrumar essa mensagem de erro, contextualizar melhor
-            System.out.println("Erro: número máximo de variáveis atingido.");
+            throwError("número máximo de variáveis atingido");
         }
     }
 
@@ -242,15 +239,16 @@ public class Repl {
             }
             // Verifica cálculo
             else if (validateCalculationInput(input)) {
-                // TODO
-                // - Converter para pósfixo
-                // - Fazer o cálculo
 
-                // print temporário
-                System.out.println("VALIDADO!");
+                String postfixInput; //  = métod\o de conversão infixo pra posfixo TODO
+
+                // Temporário enquanto o métod\o não existe
+                postfixInput = "AB+";
+                evaluatePostfixCalculation(postfixInput);
+
             }
             else {
-                System.out.println("Erro: Entrada inválida");
+                throwError("Entrada inválida");
             }
         }
     }
@@ -315,7 +313,7 @@ public class Repl {
             // Comandos de variáveis
             case "VARS":
                 if (variableNames[0] == null) {
-                    System.out.println("Nenhuma variável definida");
+                    throwError("nenhuma variável definida.");
                     break;
                 }
                 for (int i = 0; i < variableNames.length; i++) {
@@ -330,6 +328,7 @@ public class Repl {
                     variableNames[i] = null;
                     variableValues[i] = 0;
                 }
+                variableCount = 0;
                 System.out.println("Variáveis reiniciadas.");
                 break;
 
@@ -338,8 +337,6 @@ public class Repl {
                 isRecording = true;
                 startRecording();
                 break;
-
-            // FIXME Comando STOP é implementado direto na função startRecording
 
             case "ERASE":
                 System.out.println("Gravação apagada.");
@@ -350,7 +347,7 @@ public class Repl {
             case "PLAY":
 
                 if (recordedCommands.isEmpty()) {
-                    System.out.println("Não há gravação para ser reproduzida");
+                    throwError("Não há gravação para ser reproduzida");
                     break;
                 }
 
@@ -364,7 +361,10 @@ public class Repl {
                 }
                 break;
 
-            // Comando EXIT é implementado na classe Program
+            /*
+             Comando STOP é implementado no métod\o startRecording
+             Comando EXIT é implementado na classe Program
+            */
         }
     }
 
@@ -390,7 +390,7 @@ public class Repl {
 
             // Lida com comandos inválidos
             if (input.equals("REC") || input.equals("PLAY") || input.equals("ERASE")) {
-                System.out.println("Erro: comando inválido para gravação.");
+                throwError("Comando inválido para gravação");
                 continue;
             }
 
@@ -415,10 +415,16 @@ public class Repl {
 
     }
 
+    // Limpa a fila de comandos gravados
     private void cleanRecordedCommands() {
         while (!recordedCommands.isEmpty()) {
             recordedCommands.dequeue();
         }
     }
+
+    // Imprime erros para o usuário
+     private void throwError(String error) {
+         System.out.println("Erro: " + error);
+     }
 
 }
