@@ -260,25 +260,22 @@ public class Repl {
      * @param postfix cálculo do usuário formatado em pósfixo tipo: "AB+CD-/E*"
      * @return resultado final
      */
-    private Float evaluatePostfixCalculation(String postfix) {
+    public Float evaluatePostfixCalculation(String postfix) {
         Stack<Float> result = new Stack<>();
-
-        // TODO atribuir valores númericos às variáveis da expressão a ser avaliada
 
         for (int i = 0; i < postfix.length(); i++) {
             char c = postfix.charAt(i);
 
-            // FIXME deveria lidar APENAS com variáveis
-            // Empilha operandos
-            if (Character.isDigit(c)) {
-                String number = "";
-
-                while (i < postfix.length() && Character.isDigit(postfix.charAt(i))) {
-                    number += postfix.charAt(i);
-                    i++;
+            // Empilha o valor da variável
+            if (Character.isLetter(c)) {
+                // Encontra o índice da variável no array de nomes
+                for (int j = 0; j < variableCount; j++) {
+                    if (variableNames[j] == c) {
+                        // Empilha o valor da variável correspondente
+                        result.push(variableValues[j]);
+                        break;
+                    }
                 }
-
-                result.push(Float.parseFloat(number));
             }
 
             if (isOperator(c)) {
@@ -287,19 +284,19 @@ public class Repl {
 
                 switch (c) {
                     case '+':
-                        result.push(firstNumber + secondNumber);
+                        result.push( secondNumber + firstNumber);
                         break;
                     case '-':
-                        result.push(firstNumber - secondNumber);
+                        result.push(secondNumber - firstNumber);
                         break;
                     case '*':
-                        result.push(firstNumber * secondNumber);
+                        result.push(secondNumber * firstNumber);
                         break;
                     case '/':
-                        result.push(firstNumber / secondNumber);
+                        result.push(secondNumber / firstNumber);
                         break;
                     case '^':
-                        result.push((float) Math.pow(firstNumber,secondNumber));
+                        result.push((float) Math.pow(secondNumber,firstNumber));
                 }
             }
         }
