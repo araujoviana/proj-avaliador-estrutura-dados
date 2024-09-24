@@ -11,8 +11,10 @@
  // Essa classe pode ser renomeada depois
 public class Repl {
 
-     private final Queue<String> recordedCommands = new Queue<>(10);
-     private boolean isRecording = false;
+    private final int MAX_VARIABLES = 26;
+
+    private final Queue<String> recordedCommands = new Queue<>(10);
+    private boolean isRecording = false;
 
     // Poderia ser uma stack mas não tenho certeza
     // Comandos
@@ -20,11 +22,38 @@ public class Repl {
 
      // Operadores válidos
     private final Character[] operators = {'+','-','*','/','^'};
-    
-    private Character[] variableNames;
-    private Float[] variableValues;
 
-     private boolean isOperator(char c) {
+    private final Character[] variableNames = new Character[MAX_VARIABLES];
+    private final float[] variableValues = new float[MAX_VARIABLES];
+    private int variableCount = 0;
+
+    /**
+     * Armazena o valor de uma variável
+     * @param name nome da variável
+     * @param value valor da variável
+     */
+    public void storeVariable(Character name, float value) {
+        // Verifica se a variável já existe para atualizá-la
+        for (int i = 0; i < variableCount; i++) {
+            if (variableNames[i] == name) {
+                variableValues[i] = value;
+                return;
+            }
+        }
+
+        // Se a variável não existir, adiciona uma nova
+        if (variableCount < MAX_VARIABLES) {
+            variableNames[variableCount] = name;
+            variableValues[variableCount] = value;
+            variableCount++;
+        } else {
+            // TODO Arrumar essa mensagem de erro, contextualizar melhor
+            System.out.println("Erro: número máximo de variáveis atingido.");
+        }
+    }
+
+
+    private boolean isOperator(char c) {
          for (char operator : operators) {
              if (c == operator) {
                  return true;
@@ -107,9 +136,15 @@ public class Repl {
         else {
             // Verifica definição de variável
             if (isVariableDefinition(input)) {
-                // DEBUG
-                System.out.println("DELETE ME Atribuição válida de número.");
-                System.exit(0);
+                // Extraí o nome da variável
+                Character variableName = input.charAt(0);
+
+                // Extrai o valor da variável (parte após '=')
+                String valueString = input.substring(2);
+                float value = Float.parseFloat(valueString);
+                storeVariable(variableName, value);
+
+                System.out.println(input);
             }
             // Verifica cálculo
             else if (validateCalculationInput(input)) {
