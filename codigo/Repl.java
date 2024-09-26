@@ -96,9 +96,8 @@ public class Repl {
      *     <li>Contas usando números ao invés de variáveis</li>
      *     <li>Parenteses que não combinam</li>
      *     <li>Operadores inválidos</li>
-     *     <li>Variáveis indefinidas</li>
-     *     <li>Operações começando com operandos</li>
      *     <li>Cálculos com variáveis indefinidas</li>
+     *     <li>Cálculos sintaticamente errados</li>
      * </ol>
      *
      * @param input entrada infixa formatada
@@ -110,7 +109,7 @@ public class Repl {
         // Verifica a presença de números
         for (int i = 0; i < input.length(); i++) {
             if (Character.isDigit(input.charAt(i))) {
-                printError("uso direto de números sem variáveis");
+                printError("uso direto de números sem variáveis ou \n número para variável é inválido");
                 return false;
             }
         }
@@ -341,7 +340,7 @@ public class Repl {
      * Faz o cálculo pósfixo formatado.
      *
      * @param postfix cálculo do usuário formatado em pósfixo tipo: "AB+CD-/E*"
-     * @return resultado final
+     * @return float do resultado final
      */
     private Float evaluatePostfixCalculation(String postfix) {
 
