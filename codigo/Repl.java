@@ -121,7 +121,6 @@ public class Repl {
                 parenthesis.push(input.charAt(i));
             } else if (input.charAt(i) == ')') {
                 if (parenthesis.isEmpty()) {
-                    // Parenteses não combinam
                     printError("parênteses não combinam");
                     return false;
                 }
