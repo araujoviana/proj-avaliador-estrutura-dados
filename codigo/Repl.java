@@ -13,17 +13,16 @@ public class Repl {
     private final float[] variableValues = new float[MAX_VARIABLES];
     private int variableCount = 0;
 
-    // Comandos
-    private final String[] commands = {"ERASE", "EXIT", "PLAY", "REC", "RESET", "STOP", "VARS"};
 
     private final Queue<String> recordedCommands = new Queue<>(10);
     private boolean isRecording = false;
 
-    // Operadores válidos
-    private final Character[] operators = {'+', '-', '*', '/', '^'};
 
     // Verifica se um caractere é um dos operadores válidos em operators
     private boolean isOperator(char c) {
+        // Operadores válidos
+        final Character[] operators = {'+', '-', '*', '/', '^'};
+
         for (char operator : operators) {
             if (c == operator) {
                 return true;
@@ -34,6 +33,9 @@ public class Repl {
 
     // Verifica se uma String é um dos comandos válidos em commands
     private boolean isCommand(String string) {
+        // Comandos
+        final String[] commands = {"ERASE", "EXIT", "PLAY", "REC", "RESET", "STOP", "VARS"};
+
         for (String command : commands) {
             if (string.equals(command)) {
                 return true;
@@ -113,7 +115,7 @@ public class Repl {
             }
         }
 
-        // Verifica parenteses
+        // Verifica parênteses
         Stack<Character> parenthesis = new Stack<>();
         for (int i = 0; i < input.length(); i++) {
             if (input.charAt(i) == '(') {
@@ -272,6 +274,7 @@ public class Repl {
 
             String postfixInput = convertInfixToPostfix(input);
 
+            // Imprime resultado final
             System.out.println(evaluatePostfixCalculation(postfixInput));
 
         } else {
@@ -324,7 +327,7 @@ public class Repl {
         return output;
     }
 
-    // Define a precedência dos operadores
+    // Define a precedência dos operadores para o cálculo
     private static int operatorPrecedence(char operator) {
         return switch (operator) {
             case '+', '-' -> 1;
@@ -485,21 +488,20 @@ public class Repl {
 
             String input = formatInput(scanner.nextLine());
 
-            // Lida com comandos inválidos
+            // Rejeita comandos inválidos
             if (input.equals("REC") || input.equals("PLAY") || input.equals("ERASE") || input.equals("EXIT")) {
                 printError("Comando inválido para gravação");
                 continue;
             }
 
-            // Adiciona entrada pra fila
+            // Interrompe gravação
             if (input.equals("STOP")) {
                 System.out.println("Parando gravação... " + " REC: (" + recordedCommands.count() + "/10)");
                 isRecording = false;
                 break;
             }
 
-            // Leitura normal da entrada
-            // Verifica se a entrada é vazia
+            // Não grava entradas vazias
             if (input.isEmpty()) {
                 continue;
             }

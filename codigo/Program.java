@@ -7,7 +7,9 @@
  Referências:
 
  Javadocs: https://www.jetbrains.com/help/idea/javadocs.html
-
+ Final: https://www.w3schools.com/java/ref_keyword_final.asp
+ Switch: https://docs.oracle.com/en/java/javase/22/language/switch-expressions.html
+ Substring: https://www.digitalocean.com/community/tutorials/java-string-substring
   */
 
 import java.util.Scanner;
