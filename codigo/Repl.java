@@ -264,10 +264,7 @@
         // Verifica cálculo
         else if (isCalculation(input)) {
 
-            String postfixInput; //  = métod\o de conversão infixo pra posfixo TODO
-
-            // Temporário enquanto o métod\o não existe
-            postfixInput = "AB+";
+            String postfixInput = convertInfixToPostfix(input);
 
             System.out.println(evaluatePostfixCalculation(postfixInput));
 
@@ -277,13 +274,17 @@
         }
     }
 
-
-     public String infixToPostfix(String expression) {
+     /**
+      * Converte expressão infixa para pósfixa
+      * @param infixExpression String de expressão infixa tipo "A*(B+C)/D"
+      * @return String de expressão pósfixa tipo "ABC+*D/"
+      */
+     public String convertInfixToPostfix(String infixExpression) {
          Stack<Character> stack = new Stack<>();
          String output = "";
 
-         for (int i = 0; i < expression.length(); i++) {
-             char c = expression.charAt(i);
+         for (int i = 0; i < infixExpression.length(); i++) {
+             char c = infixExpression.charAt(i);
 
              // Se for um operando
              if (Character.isLetter(c)) {
@@ -334,9 +335,6 @@
      * @return resultado final
      */
     public Float evaluatePostfixCalculation(String postfix) {
-
-        // DEBUG
-        System.out.println("DELETE ME\n FUNÇÃO INCOMPLETA IGNORE ERROS DELA");
 
         Stack<Float> result = new Stack<>();
 
@@ -504,9 +502,7 @@
             // Grava entrada
             recordedCommands.enqueue(input);
 
-
         }
-
 
     }
 
