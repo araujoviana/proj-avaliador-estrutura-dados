@@ -1,12 +1,12 @@
- /////////////////////////////////////////////
- // Matheus Gabriel Viana Araujo - 10420444 //
- // Enzo Carvalho Pagliarini - 10425707     //
- /////////////////////////////////////////////
+/////////////////////////////////////////////
+// Matheus Gabriel Viana Araujo - 10420444 //
+// Enzo Carvalho Pagliarini - 10425707     //
+/////////////////////////////////////////////
 
 
- import java.util.Scanner;
+import java.util.Scanner;
 
- public class Repl {
+public class Repl {
 
     private final int MAX_VARIABLES = 26;
     private final Character[] variableNames = new Character[MAX_VARIABLES];
@@ -20,45 +20,46 @@
     private boolean isRecording = false;
 
     // Operadores válidos
-    private final Character[] operators = {'+','-','*','/','^'};
+    private final Character[] operators = {'+', '-', '*', '/', '^'};
 
-     // Verifica se um caractere é um dos operadores válidos em operators
-     private boolean isOperator(char c) {
-         for (char operator : operators) {
-             if (c == operator) {
-                 return true;
-             }
-         }
-         return false;
-     }
+    // Verifica se um caractere é um dos operadores válidos em operators
+    private boolean isOperator(char c) {
+        for (char operator : operators) {
+            if (c == operator) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-     // Verifica se uma String é um dos comandos válidos em commands
-     private boolean isCommand(String string) {
-         for (String command : commands) {
-             if (string.equals(command)) {
-                 return true;
-             }
-         }
-         return false;
-     }
+    // Verifica se uma String é um dos comandos válidos em commands
+    private boolean isCommand(String string) {
+        for (String command : commands) {
+            if (string.equals(command)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-     // Verifica se uma String é um caractere é o nome de uma váriavel definida
-     private boolean isVariableName(Character character) {
-         for (Character variableName : variableNames) {
-             if (character.equals(variableName)) {
-                 return true;
-             }
-         }
-         return false;
-     }
+    // Verifica se uma String é um caractere é o nome de uma váriavel definida
+    private boolean isVariableName(Character character) {
+        for (Character variableName : variableNames) {
+            if (character.equals(variableName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Verifica se a entrada é uma definição válida de variável.
      * Variáveis são válidas se seguem a estrutura "LETRA=NÚMERO_REAL"
+     *
      * @param input string formatada do usuário
      * @return true se for uma atribuição válida
      */
-    public boolean isVariableDefinition(String input) {
+    private boolean isVariableDefinition(String input) {
         // Verifica se o formato é uma atribuição de variável (letra seguida de '=' e um número)
         if (Character.isLetter(input.charAt(0)) && input.charAt(1) == '=' && Character.isDigit(input.charAt(2))) {
             boolean isNumber = true;
@@ -75,8 +76,7 @@
                         break;
                     }
                     hasDecimalPoint = true;
-                }
-                else if (!Character.isDigit(c)) {
+                } else if (!Character.isDigit(c)) {
                     isNumber = false;
                     break;
                 }
@@ -88,117 +88,116 @@
     }
 
 
+    /**
+     * Verifica se a entrada infixa formatada é válida, rejeitando:
+     * <ol>
+     *     <li>Contas usando números ao invés de variáveis</li>
+     *     <li>Parenteses que não combinam</li>
+     *     <li>Operadores inválidos</li>
+     *     <li>Variáveis indefinidas</li>
+     *     <li>Operações começando com operandos</li>
+     *     <li>Cálculos com variáveis indefinidas</li>
+     * </ol>
+     *
+     * @param input entrada infixa formatada
+     * @return true se a entrada é válida
+     */
+    private boolean isCalculation(String input) {
+        boolean inputIsValid;
 
-     /**
-      * Verifica se a entrada infixa formatada é válida, rejeitando:
-      * <ol>
-      *     <li>Contas usando números ao invés de variáveis</li>
-      *     <li>Parenteses que não combinam</li>
-      *     <li>Operadores inválidos</li>
-      *     <li>Variáveis indefinidas</li>
-      *     <li>Operações começando com operandos</li>
-      *     <li>Cálculos com variáveis indefinidas</li>
-      * </ol>
-      * @param input entrada infixa formatada
-      * @return true se a entrada é válida
-      */
-     public boolean isCalculation(String input) {
-         boolean inputIsValid;
+        // Verifica a presença de números
+        for (int i = 0; i < input.length(); i++) {
+            if (Character.isDigit(input.charAt(i))) {
+                printError("uso direto de números sem variáveis");
+                return false;
+            }
+        }
 
-         // Verifica a presença de números
-         for (int i = 0; i < input.length(); i++) {
-             if (Character.isDigit(input.charAt(i))) {
-                 printError("uso direto de números sem variáveis");
-                 return false;
-             }
-         }
+        // Verifica parenteses
+        Stack<Character> parenthesis = new Stack<>();
+        for (int i = 0; i < input.length(); i++) {
+            if (input.charAt(i) == '(') {
+                parenthesis.push(input.charAt(i));
+            } else if (input.charAt(i) == ')') {
+                if (parenthesis.isEmpty()) {
+                    // Parenteses não combinam
+                    printError("parênteses não combinam");
+                    return false;
+                }
+                parenthesis.pop();
+            }
+        }
+        inputIsValid = parenthesis.isEmpty();
 
-         // Verifica parenteses
-         Stack<Character> parenthesis = new Stack<>();
-         for (int i = 0; i < input.length(); i++) {
-             if (input.charAt(i) == '(') {
-                 parenthesis.push(input.charAt(i));
-             }
-             else if (input.charAt(i) == ')') {
-                 if (parenthesis.isEmpty()) {
-                     // Parenteses não combinam
-                     printError("parênteses não combinam");
-                     return false;
-                 }
-                 parenthesis.pop();
-             }
-         }
-         inputIsValid = parenthesis.isEmpty();
+        // Verifica operadores
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            if (!Character.isLetter(c)) {
+                switch (c) {
+                    case '(':
+                    case ')':
+                    case '+':
+                    case '-':
+                    case '*':
+                    case '/':
+                    case '^':
+                        continue;
+                    default:
+                        printError("operador inválido");
+                        return false;
+                }
+            }
+        }
 
-         // Verifica operadores
-         for (int i = 0; i < input.length(); i++) {
-             char c = input.charAt(i);
-             if (!Character.isLetter(c)) {
-                 switch (c) {
-                     case '(':
-                     case ')':
-                     case '+':
-                     case '-':
-                     case '*':
-                     case '/':
-                     case '^':
-                         continue;
-                     default:
-                         printError("operador inválido");
-                         return false;
-                 }
-             }
-         }
+        // Verifica se as variáveis acessadas foram definidas
+        for (int i = 0; i < input.length(); i++) {
+            if (Character.isLetter(input.charAt(i))) {
+                if (!isVariableName(input.charAt(i))) {
+                    printError("variável " + input.charAt(i) + " não definida.");
+                    return false;
+                }
+            }
+        }
 
-         // Verifica se as variáveis acessadas foram definidas
-         for (int i = 0; i < input.length(); i++) {
-             if (Character.isLetter(input.charAt(i))) {
-                 if (!isVariableName(input.charAt(i))) {
-                     printError("variável "+ input.charAt(i)+" não definida.");
-                     return false;
-                 }
-             }
-         }
+        // Verifica a posição de operadores
+        // Sempre haverá uma única variável na stack se a operação é válida
+        Stack<Character> variables = new Stack<>();
 
-         // Verifica a posição de operadores
-         // Sempre haverá uma única variável na stack se a operação é válida
-         Stack<Character> variables = new Stack<>();
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
 
-         for (int i = 0; i < input.length(); i++) {
-             char c = input.charAt(i);
+            if (Character.isLetter(c)) {
+                variables.push(c);
+            } else if (isOperator(c)) {
+                if (variables.isEmpty()) {
+                    printError("cálculo não estruturado corretamente");
+                    return false;
+                }
+                variables.pop();
+            }
+        }
 
-             if (Character.isLetter(c)) {
-                 variables.push(c);
-             }
-             else if (isOperator(c)) {
-                 if (variables.isEmpty()) {
-                     printError("cálculo não estruturado corretamente");
-                     return false;
-                 }
-                 variables.pop();
-             }
-         }
+        // No final, deve haver apenas uma variável restante na pilha
+        if (!(variables.count() == 1)) {
+            return false;
+        }
 
-         // No final, deve haver apenas uma variável restante na pilha
-         if (!(variables.count() == 1)) {
-             return false;
-         }
-
-         if (!inputIsValid) {
-             printError("parênteses não combinam");
-         }
-         return inputIsValid;
-     }
+        if (!inputIsValid) {
+            printError("parênteses não combinam");
+        }
+        return inputIsValid;
+    }
 
 
-     /**
-      * Armazena ou atualiza o valor de uma variável.
-      * Se a variável já existir, atualiza seu valor. Caso contrário, cria uma nova
-      * variável, desde que o limite não seja excedido.
-      * @param name  nome da variável a ser armazenada ou atualizada.
-      * @param value valor associado à variável.
-      */
-    public void storeVariable(Character name, float value) {
+    /**
+     * Armazena ou atualiza o valor de uma variável.
+     * Se a variável já existir, atualiza seu valor. Caso contrário, cria uma nova
+     * variável, desde que o limite não seja excedido.
+     *
+     * @param name  nome da variável a ser armazenada ou atualizada.
+     * @param value valor associado à variável.
+     */
+    private void storeVariable(Character name, float value) {
         // Verifica se a variável já existe para atualizá-la
         for (int i = 0; i < variableCount; i++) {
             if (variableNames[i] == name) {
@@ -220,17 +219,19 @@
 
     /**
      * Converte a entrada inicial para maíusculo e remove todos os espaços
+     *
      * @param input entrada infixa tipo " (a + 7)  "
      * @return entrada infixa formatada tipo "(A+7)"
      */
     public String formatInput(String input) {
-        return input.toUpperCase().replaceAll(" ","");
+        return input.toUpperCase().replaceAll(" ", "");
     }
 
 
     /**
      * Lê a entrada não formatada do usuário e avalia se ela é um comando,
      * cálculo ou atribuição de variável.
+     *
      * @param input entrada formatada do usuário
      */
     public void readFormattedInput(String input) {
@@ -246,8 +247,7 @@
                         System.out.println(variableValues[i]);
                     }
                 }
-            }
-            else {
+            } else {
                 printError("impossível verificar o valor de " + input.charAt(0));
             }
         }
@@ -256,7 +256,7 @@
             evaluateCommand(input);
         }
         // Verifica definição de variável
-       else if (isVariableDefinition(input)) {
+        else if (isVariableDefinition(input)) {
             // Extraí o nome da variável
             Character variableName = input.charAt(0);
 
@@ -274,72 +274,73 @@
 
             System.out.println(evaluatePostfixCalculation(postfixInput));
 
-        }
-        else {
+        } else {
             printError("entrada inválida");
         }
     }
 
-     /**
-      * Converte expressão infixa para pósfixa
-      * @param infixExpression String de expressão infixa tipo "A*(B+C)/D"
-      * @return String de expressão pósfixa tipo "ABC+*D/"
-      */
-     public String convertInfixToPostfix(String infixExpression) {
-         Stack<Character> stack = new Stack<>();
-         String output = "";
+    /**
+     * Converte expressão infixa para pósfixa
+     *
+     * @param infixExpression String de expressão infixa tipo "A*(B+C)/D"
+     * @return String de expressão pósfixa tipo "ABC+*D/"
+     */
+    private String convertInfixToPostfix(String infixExpression) {
+        Stack<Character> stack = new Stack<>();
+        String output = "";
 
-         for (int i = 0; i < infixExpression.length(); i++) {
-             char c = infixExpression.charAt(i);
+        for (int i = 0; i < infixExpression.length(); i++) {
+            char c = infixExpression.charAt(i);
 
-             // Se for um operando
-             if (Character.isLetter(c)) {
-                 output += c;
-             }
-             // Se for um parêntese esquerdo, empilha
-             else if (c == '(') {
-                 stack.push(c);
-             }
-             // Se for um parêntese direito, desempilha até encontrar o parêntese esquerdo
-             else if (c == ')') {
-                 while (!stack.isEmpty() && stack.top().getValue() != '(') {
-                     output += stack.pop().getValue();
-                 }
-                 stack.pop(); // Remove o '(' da pilha
-             }
-             // Operadores
-             else {
-                 while (!stack.isEmpty() && operatorPrecedence(c) <= operatorPrecedence(stack.top().getValue())) {
-                     output += stack.pop().getValue();
-                 }
-                 stack.push(c);
-             }
-         }
+            // Se for um operando
+            if (Character.isLetter(c)) {
+                output += c;
+            }
+            // Se for um parêntese esquerdo, empilha
+            else if (c == '(') {
+                stack.push(c);
+            }
+            // Se for um parêntese direito, desempilha até encontrar o parêntese esquerdo
+            else if (c == ')') {
+                while (!stack.isEmpty() && stack.top().getValue() != '(') {
+                    output += stack.pop().getValue();
+                }
+                stack.pop(); // Remove o '(' da pilha
+            }
+            // Operadores
+            else {
+                while (!stack.isEmpty() && operatorPrecedence(c) <= operatorPrecedence(stack.top().getValue())) {
+                    output += stack.pop().getValue();
+                }
+                stack.push(c);
+            }
+        }
 
-         // Desempilha todos os operadores restantes
-         while (!stack.isEmpty()) {
-             output += stack.pop().getValue();
-         }
+        // Desempilha todos os operadores restantes
+        while (!stack.isEmpty()) {
+            output += stack.pop().getValue();
+        }
 
-         return output;
-     }
+        return output;
+    }
 
-     // Define a precedência dos operadores
-     private static int operatorPrecedence(char operator) {
-         return switch (operator) {
-             case '+', '-' -> 1;
-             case '*', '/' -> 2;
-             case '^' -> 3;
-             default -> -1;
-         };
-     }
+    // Define a precedência dos operadores
+    private static int operatorPrecedence(char operator) {
+        return switch (operator) {
+            case '+', '-' -> 1;
+            case '*', '/' -> 2;
+            case '^' -> 3;
+            default -> -1;
+        };
+    }
 
     /**
      * Faz o cálculo pósfixo formatado.
+     *
      * @param postfix cálculo do usuário formatado em pósfixo tipo: "AB+CD-/E*"
      * @return resultado final
      */
-    public Float evaluatePostfixCalculation(String postfix) {
+    private Float evaluatePostfixCalculation(String postfix) {
 
         Stack<Float> result = new Stack<>();
 
@@ -373,7 +374,7 @@
 
                 switch (c) {
                     case '+':
-                        result.push( secondNumber + firstNumber);
+                        result.push(secondNumber + firstNumber);
                         break;
                     case '-':
                         result.push(secondNumber - firstNumber);
@@ -385,7 +386,7 @@
                         result.push(secondNumber / firstNumber);
                         break;
                     case '^':
-                        result.push((float) Math.pow(secondNumber,firstNumber));
+                        result.push((float) Math.pow(secondNumber, firstNumber));
                 }
             }
         }
@@ -394,10 +395,11 @@
     }
 
     /**
-      * Executa o comando inserido pelo usuário, comandos mais complexos usam métodos separados.
-      * @param command comando formatado inserido pelo usuário
-      */
-    public void evaluateCommand(String command) {
+     * Executa o comando inserido pelo usuário, comandos mais complexos usam métodos separados.
+     *
+     * @param command comando formatado inserido pelo usuário
+     */
+    private void evaluateCommand(String command) {
 
         switch (command) {
 
@@ -470,7 +472,7 @@
 
         while (isRecording) {
 
-            System.out.println("REC: ("+recordedCommands.count()+"/10)");
+            System.out.println("REC: (" + recordedCommands.count() + "/10)");
 
             // Verifica se fila de comandos está cheia
             if (recordedCommands.isFull()) {
@@ -491,7 +493,7 @@
 
             // Adiciona entrada pra fila
             if (input.equals("STOP")) {
-                System.out.println("Parando gravação... "+" REC: ("+ recordedCommands.count()+"/10)");
+                System.out.println("Parando gravação... " + " REC: (" + recordedCommands.count() + "/10)");
                 isRecording = false;
                 break;
             }
@@ -517,8 +519,8 @@
     }
 
     // Imprime erros para o usuário
-     private void printError(String error) {
-         System.out.println("Erro: " + error);
-     }
+    private void printError(String error) {
+        System.out.println("Erro: " + error);
+    }
 
 }
