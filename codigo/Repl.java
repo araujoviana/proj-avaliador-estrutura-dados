@@ -277,6 +277,57 @@
         }
     }
 
+
+     public String infixToPostfix(String expression) {
+         Stack<Character> stack = new Stack<>();
+         String output = "";
+
+         for (int i = 0; i < expression.length(); i++) {
+             char c = expression.charAt(i);
+
+             // Se for um operando
+             if (Character.isLetter(c)) {
+                 output += c;
+             }
+             // Se for um parêntese esquerdo, empilha
+             else if (c == '(') {
+                 stack.push(c);
+             }
+             // Se for um parêntese direito, desempilha até encontrar o parêntese esquerdo
+             else if (c == ')') {
+                 while (!stack.isEmpty() && stack.top().getValue() != '(') {
+                     output += stack.pop().getValue();
+                 }
+                 stack.pop(); // Remove o '(' da pilha
+             }
+             // Operadores
+             else {
+                 while (!stack.isEmpty() && operatorPrecedence(c) <= operatorPrecedence(stack.top().getValue())) {
+                     output += stack.pop().getValue();
+                 }
+                 stack.push(c);
+             }
+         }
+
+         // Desempilha todos os operadores restantes
+         while (!stack.isEmpty()) {
+             output += stack.pop().getValue();
+         }
+
+         return output;
+     }
+
+     // Define a precedência dos operadores
+     private static int operatorPrecedence(char operator) {
+         return switch (operator) {
+             case '+', '-' -> 1;
+             case '*', '/' -> 2;
+             case '^' -> 3;
+             default -> -1;
+         };
+     }
+
+     // --------------
     /**
      * Executa o cálculo formatado em pósfixo usando uma pilha e retorna o resultado
      * @param postfix cálculo do usuário formatado em pósfixo tipo: "AB+CD-/E*"
