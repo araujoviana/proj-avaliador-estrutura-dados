@@ -3,6 +3,7 @@
  // Enzo Carvalho Pagliarini - 10425707	    //
  /////////////////////////////////////////////
 
+
 import java.util.Scanner;
 
 public class Program {
@@ -15,9 +16,9 @@ public class Program {
 		Repl repl = new Repl();
 
 		while (!input.equals("EXIT")){
-			// Execução ideal
 			System.out.print("> ");
 
+			// Entrada é formatada antes de ser avaliada
 			input = repl.formatInput(scanner.nextLine());
 
 			repl.readFormattedInput(input);

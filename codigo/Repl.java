@@ -54,7 +54,7 @@
 
     /**
      * Verifica se a entrada é uma definição válida de variável.
-     * Variáveis são válidas se seguem a estrutura <LETRA>=<NÚMERO REAL>
+     * Variáveis são válidas se seguem a estrutura "LETRA=NÚMERO_REAL"
      * @param input string formatada do usuário
      * @return true se for uma atribuição válida
      */
@@ -108,6 +108,7 @@
          // Verifica a presença de números
          for (int i = 0; i < input.length(); i++) {
              if (Character.isDigit(input.charAt(i))) {
+                 printError("uso direto de números sem variáveis");
                  return false;
              }
          }
@@ -143,6 +144,7 @@
                      case '^':
                          continue;
                      default:
+                         printError("operador inválido");
                          return false;
                  }
              }
@@ -170,6 +172,7 @@
              }
              else if (isOperator(c)) {
                  if (variables.isEmpty()) {
+                     printError("cálculo não estruturado corretamente");
                      return false;
                  }
                  variables.pop();
@@ -182,17 +185,19 @@
          }
 
          if (!inputIsValid) {
-             printError("Parênteses não combinam");
+             printError("parênteses não combinam");
          }
          return inputIsValid;
      }
 
 
      /**
-     * Armazena o valor de uma variável nos vetores Variable
-     * @param name nome da variável
-     * @param value valor da variável
-     */
+      * Armazena ou atualiza o valor de uma variável.
+      * Se a variável já existir, atualiza seu valor. Caso contrário, cria uma nova
+      * variável, desde que o limite não seja excedido.
+      * @param name  nome da variável a ser armazenada ou atualizada.
+      * @param value valor associado à variável.
+      */
     public void storeVariable(Character name, float value) {
         // Verifica se a variável já existe para atualizá-la
         for (int i = 0; i < variableCount; i++) {
@@ -224,7 +229,8 @@
 
 
     /**
-     * Lê a entrada não formatada do usuário e avalia se ela é um comando, cálculo ou atribuição de variável
+     * Lê a entrada não formatada do usuário e avalia se ela é um comando,
+     * cálculo ou atribuição de variável.
      * @param input entrada formatada do usuário
      */
     public void readFormattedInput(String input) {
@@ -328,9 +334,8 @@
          };
      }
 
-     // --------------
     /**
-     * Executa o cálculo formatado em pósfixo usando uma pilha e retorna o resultado
+     * Faz o cálculo pósfixo formatado.
      * @param postfix cálculo do usuário formatado em pósfixo tipo: "AB+CD-/E*"
      * @return resultado final
      */
@@ -389,8 +394,8 @@
     }
 
     /**
-      * Executa o comando inserido pelo usuário, comandos mais complexos usam métodos separados
-      * @param command comando inserido pelo usuário
+      * Executa o comando inserido pelo usuário, comandos mais complexos usam métodos separados.
+      * @param command comando formatado inserido pelo usuário
       */
     public void evaluateCommand(String command) {
 
@@ -454,9 +459,7 @@
     }
 
 
-     /** Começa a gravação, armazena todos os comandos em uma fila de no máximo 10 elementos,
-      * reinicia a fila se os comandos REC ou ERASE são executados
-      */
+    // Começa a gravação, armazena todos os comandos em uma fila de no máximo 10 elementos.
     private void startRecording() {
         Scanner scanner = new Scanner(System.in);
 
