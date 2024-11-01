@@ -281,10 +281,10 @@ public class Repl {
     }
 
     /**
-     * Converte expressão infixa para pósfixa
+     * Converte uma expressão infixa para pósfixa
      *
-     * @param infixExpression String de expressão infixa tipo "A*(B+C)/D"
-     * @return String de expressão pósfixa tipo "ABC+*D/"
+	 * @param infixExpression A expressão infixa a ser convertida. Pode conter operandos, operadores e parênteses.
+	 * @return A expressão na notação pós-fixa, sem parênteses.
      */
     private String convertInfixToPostfix(String infixExpression) {
         Stack<Character> stack = new Stack<>();
@@ -292,29 +292,30 @@ public class Repl {
 
         for (int i = 0; i < infixExpression.length(); i++) {
             char c = infixExpression.charAt(i);
-
-            // Se for um operando
+            
+            // Se for um operando (letra), adiciona ao resultado
             if (Character.isLetter(c)) {
                 output += c;
             }
-            // Se for um parêntese esquerdo, empilha
+            // Se for um parêntese esquerdo '(', empilha
             else if (c == '(') {
                 stack.push(c);
             }
-            // Se for um parêntese direito, desempilha até encontrar o parêntese esquerdo
+            // Se for um parêntese direito ')', desempilha até encontrar o parêntese esquerdo
             else if (c == ')') {
                 while (!stack.isEmpty() && stack.top().getValue() != '(') {
-                    output += stack.pop().getValue();
+                    output += stack.pop().getValue(); // Adiciona operadores ao resultado
                 }
                 stack.pop(); // Remove o '(' da pilha
             }
-            // Operadores
+            // Para operadores, desempilha operadores da pilha com maior ou igual precedência
             else {
                 while (!stack.isEmpty() && operatorPrecedence(c) <= operatorPrecedence(stack.top().getValue())) {
-                    output += stack.pop().getValue();
+                    output += stack.pop().getValue(); // Adiciona operadores ao resultado
                 }
-                stack.push(c);
+                stack.push(c); // Empilha o operador atual
             }
+
         }
 
         // Desempilha todos os operadores restantes
@@ -325,7 +326,7 @@ public class Repl {
         return output;
     }
 
-    // Define a precedência dos operadores para o cálculo
+    // Define a precedência dos operadores para a conversão de expressão infixa para pósfixa
     private static int operatorPrecedence(char operator) {
         return switch (operator) {
             case '+', '-' -> 1;
@@ -336,9 +337,9 @@ public class Repl {
     }
 
     /**
-     * Faz o cálculo pósfixo formatado.
+     * Avalia uma expressão pósfixa e retorna o resultado.
      *
-     * @param postfix cálculo do usuário formatado em pósfixo tipo: "AB+CD-/E*"
+     * @param postfix expressão pósfixa a ser avaliada
      * @return float do resultado final
      */
     private Float evaluatePostfixCalculation(String postfix) {
@@ -363,7 +364,7 @@ public class Repl {
                     }
                 }
 
-                // Se a variável não for encontrada, lança um erro ou imprime uma mensagem
+                // Se a variável não for encontrada, imprime uma mensagem
                 if (!variableFound) {
                     printError("uso de variável indefinida.");
                 }
@@ -396,9 +397,10 @@ public class Repl {
     }
 
     /**
-     * Executa o comando inserido pelo usuário, comandos mais complexos usam métodos separados.
+     * Avalia e executa um comando fornecido, manipulando variáveis e gravações de comandos,
+  	 * comandos mais complexos usam métodos separados.
      *
-     * @param command comando formatado inserido pelo usuário
+     * @param command comando formatado válido inserido pelo usuário
      */
     private void evaluateCommand(String command) {
 
