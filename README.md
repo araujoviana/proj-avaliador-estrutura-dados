@@ -1,3 +1,5 @@
+> 📦 **Archived (November 2026).** A Java REPL that evaluates reverse Polish notation expressions with a stack, from a data structures course (2024). Kept as a read-only record of what I was working on at the time; it is no longer maintained.
+
 # proj-avaliador-estrutura-dados
 ## Descrição
 Esse projeto implementa um REPL em Java que avalia expressões matemáticas em notação polonesa reversa (RPN) usando uma pilha para gerenciamento de operações. O programa também fornece funcionalidades de manipulação de variáveis e comandos adicionais para gravação e reprodução de operações.
